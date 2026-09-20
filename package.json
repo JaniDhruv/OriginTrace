@@ -1,0 +1,35 @@
+{
+  "name": "origintrace",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "seed": "npx tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.5.0",
+    "@sanity/client": "^7.0.0",
+    "cheerio": "^1.0.0",
+    "diff": "^7.0.0",
+    "jsdom": "^29.1.1",
+    "next": "16.3.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "sanity": "^6.15.0",
+    "sanity-plugin-asset-source-unsplash": "^7.0.25"
+  },
+  "devDependencies": {
+    "@types/diff": "^7.0.0",
+    "@types/jsdom": "^30.0.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.5",
+    "tsx": "^4.0.0",
+    "typescript": "^5"
+  }
+}
