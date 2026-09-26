@@ -4,8 +4,8 @@ import { sanityReadClient } from '@/sanity/client';
 export async function GET() {
   try {
     const articlesQuery = `count(*[_type == "article"])`;
-    const checksQuery = `count(*[_type == "provenanceCheck"])`;
-    const repostsQuery = `count(*[_type == "provenanceCheck" && verdict == "unattributed_repost"])`;
+    const checksQuery = `count(array::unique(*[_type == "provenanceCheck"].checkedUrl))`;
+    const repostsQuery = `count(array::unique(*[_type == "provenanceCheck" && verdict == "unattributed_repost"].checkedUrl))`;
 
     const [articles, checks, reposts] = await Promise.all([
       sanityReadClient.fetch(articlesQuery),
