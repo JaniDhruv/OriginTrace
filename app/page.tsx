@@ -244,17 +244,36 @@ export default function HomePage() {
       {scanResult && (
         <div className="results-section">
           {/* Report header */}
-          <div className="scan-report-header">
-            <div className="scan-report-title">
-              <span className="text-gradient">{scanResult.article.title}</span>
+          <div className="scan-report-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+            <div>
+              <div className="scan-report-title">
+                <span className="text-gradient">{scanResult.article.title}</span>
+              </div>
+              <div className="scan-report-meta">
+                by {scanResult.article.authorName || 'Unknown'} ·{' '}
+                <a href={scanResult.article.canonicalUrl} target="_blank" rel="noopener noreferrer">
+                  {scanResult.article.canonicalUrl}
+                </a>{' '}
+                · {formatDate(scanResult.article.publishedAt)}
+              </div>
             </div>
-            <div className="scan-report-meta">
-              by {scanResult.article.authorName || 'Unknown'} ·{' '}
-              <a href={scanResult.article.canonicalUrl} target="_blank" rel="noopener noreferrer">
-                {scanResult.article.canonicalUrl}
-              </a>{' '}
-              · {formatDate(scanResult.article.publishedAt)}
-            </div>
+            
+            <button 
+              className="btn-share" 
+              onClick={() => {
+                const url = new URL(`/report/${scanResult.article.id}`, window.location.href).toString();
+                navigator.clipboard.writeText(url);
+                const btn = document.getElementById('share-btn-home');
+                if (btn) {
+                  const originalText = btn.innerText;
+                  btn.innerText = 'Copied Link!';
+                  setTimeout(() => btn.innerText = originalText, 2000);
+                }
+              }}
+              id="share-btn-home"
+            >
+              🔗 Share Report
+            </button>
           </div>
 
           {/* Metrics */}

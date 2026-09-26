@@ -109,17 +109,35 @@ export default function ReportPage({ params }: { params: Promise<{ articleId: st
       </div>
 
       <div className="results-section">
-        <div className="scan-report-header">
-          <div className="scan-report-title">
-            <span className="text-gradient">{data.article.title}</span>
+        <div className="scan-report-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+          <div>
+            <div className="scan-report-title">
+              <span className="text-gradient">{data.article.title}</span>
+            </div>
+            <div className="scan-report-meta">
+              by {data.article.authorName || 'Unknown'} ·{' '}
+              <a href={data.article.canonicalUrl} target="_blank" rel="noopener noreferrer">
+                {data.article.canonicalUrl}
+              </a>{' '}
+              · {new Date(data.article.publishedAt).toLocaleDateString()}
+            </div>
           </div>
-          <div className="scan-report-meta">
-            by {data.article.authorName || 'Unknown'} ·{' '}
-            <a href={data.article.canonicalUrl} target="_blank" rel="noopener noreferrer">
-              {data.article.canonicalUrl}
-            </a>{' '}
-            · {new Date(data.article.publishedAt).toLocaleDateString()}
-          </div>
+          
+          <button 
+            className="btn-share" 
+            onClick={() => {
+              navigator.clipboard.writeText(window.location.href);
+              const btn = document.getElementById('share-btn');
+              if (btn) {
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                setTimeout(() => btn.innerText = originalText, 2000);
+              }
+            }}
+            id="share-btn"
+          >
+            🔗 Share Report
+          </button>
         </div>
 
         <div className="metrics-row" style={{ gridTemplateColumns: '1fr 1fr' }}>
