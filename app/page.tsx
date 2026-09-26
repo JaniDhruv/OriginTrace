@@ -99,6 +99,27 @@ export default function HomePage() {
     event.preventDefault();
     if (!devToUrl.trim()) return;
 
+    let targetUrl = devToUrl.trim();
+    if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+      targetUrl = 'https://' + targetUrl;
+    }
+
+    try {
+      const parsed = new URL(targetUrl);
+      const host = parsed.hostname.replace(/^www\./, '').toLowerCase();
+      const segments = parsed.pathname.split('/').filter(Boolean);
+      
+      if (host !== 'dev.to' || segments.length < 2) {
+        setError('This is not a valid DEV.to post link.');
+        setScanResult(null);
+        return;
+      }
+    } catch {
+      setError('Please enter a valid URL.');
+      setScanResult(null);
+      return;
+    }
+
     setScanning(true);
     setScanResult(null);
     setError('');
@@ -107,7 +128,7 @@ export default function HomePage() {
       const res = await fetch('/api/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ devToUrl: devToUrl.trim() }),
+        body: JSON.stringify({ devToUrl: targetUrl }),
       });
 
       const data = await res.json();
@@ -157,9 +178,9 @@ export default function HomePage() {
 
           <form onSubmit={handleScan} className="input-group">
             <input
-              type="url"
+              type="text"
               className="input"
-              placeholder="https://dev.to/username/original-post"
+              placeholder="dev.to/username/original-post"
               value={devToUrl}
               onChange={(event) => setDevToUrl(event.target.value)}
               required
@@ -360,14 +381,15 @@ function CopyCard({
       {attribution && (
         <div style={{ padding: 14, background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', marginBottom: 14 }}>
           <div className="stat-label">Attribution evidence</div>
-          <p style={{ marginTop: 4, fontSize: '0.875rem' }}>
-            {attribution.signals.length ? attribution.signals.join('; ') : 'No attribution signals detected.'}
+          <p style={{ marginTop: 4, fontSize: '0.875rem', lineHeight: '1.5' }}>
+            {attribution.isProperlyAttributed 
+              ? 'Properly attributed with original author name and post link.'
+              : attribution.missing.length === 2
+                ? 'Missing both original author name and original post link.'
+                : attribution.missing.includes('original author name')
+                  ? 'Links to the original post, but missing the original author name.'
+                  : 'Mentions the author name, but missing a link to the original post.'}
           </p>
-          {attribution.missing.length > 0 && (
-            <p style={{ color: 'var(--color-repost)', marginTop: 6, fontSize: '0.875rem' }}>
-              Missing: {attribution.missing.join(', ')}
-            </p>
-          )}
         </div>
       )}
 
