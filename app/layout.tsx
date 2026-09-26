@@ -28,7 +28,6 @@ export default function RootLayout({
             </Link>
             <nav className="header-nav">
               <Link href="/">Scan</Link>
-              <Link href="/portfolio">Portfolio</Link>
             </nav>
           </div>
         </header>
