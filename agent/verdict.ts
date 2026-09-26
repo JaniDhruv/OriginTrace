@@ -108,12 +108,17 @@ export function interpretVerdict(
     };
   }
 
+  const devToUsername = bestMatch.article.canonicalUrl.includes('dev.to/')
+    ? bestMatch.article.canonicalUrl.split('dev.to/')[1]?.split('/')[0]
+    : '';
+
   // Check for attribution — using outbound links, raw HTML, and author name
   const attribution = analyzeAttribution(
     extracted,
     bestMatch.article.canonicalUrl,
     bestMatch.article.title,
-    bestMatch.article.authorName || ''
+    bestMatch.article.authorName || '',
+    devToUsername
   );
 
   if (attribution.isProperlyAttributed) {
@@ -278,7 +283,8 @@ export function analyzeAttribution(
   extracted: ExtractedContent,
   originalUrl: string,
   originalTitle: string,
-  authorName: string = ''
+  authorName: string = '',
+  devToUsername: string = ''
 ): AttributionReport {
   const targetText = extracted.text || '';
   const rawHtml = extracted.rawHtml || '';
@@ -322,10 +328,37 @@ export function analyzeAttribution(
 
   // Check for author name + attribution signal
   let hasAuthorName = false;
-  if (authorName && authorName.length > 3) {
+  
+  if (devToUsername && devToUsername.length > 2) {
+    const userLower = devToUsername.toLowerCase();
+    if (lowerText.includes(userLower) || lowerHtml.includes(userLower)) {
+      hasAuthorName = true;
+      signals.push(`Mentions original author username: ${devToUsername}`);
+    }
+  }
+
+  if (!hasAuthorName && authorName && authorName.length > 2) {
     const authorLower = authorName.toLowerCase();
+    
+    // Check if the exact name is in the text/html
     if (lowerText.includes(authorLower) || lowerHtml.includes(authorLower)) {
       hasAuthorName = true;
+    } 
+    // Or if the extracted page author loosely matches
+    else if (extracted.author && extracted.author.toLowerCase().includes(authorLower)) {
+      hasAuthorName = true;
+    } 
+    // Fallback: Check if the first name and last name are both present
+    else {
+       const parts = authorLower.split(' ').filter(p => p.length > 2);
+       if (parts.length >= 2) {
+         // If both first and last name appear anywhere in the extracted text
+         const hasAllParts = parts.every(part => lowerText.includes(part) || lowerHtml.includes(part));
+         if (hasAllParts) hasAuthorName = true;
+       }
+    }
+    
+    if (hasAuthorName) {
       signals.push(`Mentions original author: ${authorName}`);
     }
   }
