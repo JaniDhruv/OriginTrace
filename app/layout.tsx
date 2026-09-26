@@ -49,8 +49,8 @@ export default function RootLayout({
         <footer className="site-footer">
           <div className="site-footer-inner">
             <div className="site-footer-brand">
-              <Image src="/logo.jpg" alt="OriginTrace" width={24} height={24} className="header-logo-img" style={{ borderRadius: 6 }} />
-              <span>OriginTrace</span>
+              <Image src="/logo.jpg?v=2" alt="OriginTrace" width={28} height={28} className="header-logo-img" style={{ width: 28, height: 28, borderRadius: '50%' }} unoptimized />
+              <span style={{ fontWeight: 700, background: 'linear-gradient(135deg, #e2e8f0 0%, var(--accent-secondary) 60%, var(--accent-primary) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>OriginTrace</span>
             </div>
             <p className="site-footer-tagline">
               Built for the{' '}

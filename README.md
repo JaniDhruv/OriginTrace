@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="public/logo.jpg" alt="OriginTrace Logo" width="200" />
+  <img src="public/icon.png" alt="OriginTrace Logo" width="150" />
 </p>
 
 <h1 align="center">OriginTrace</h1>
