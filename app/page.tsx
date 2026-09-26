@@ -69,6 +69,7 @@ export default function HomePage() {
   const [recentChecks, setRecentChecks] = useState<RecentCheck[]>([]);
   const [copiedUrl, setCopiedUrl] = useState('');
   const [scanPhase, setScanPhase] = useState(0);
+  const [activeTab, setActiveTab] = useState<'all' | 'actionable' | 'credited'>('all');
 
   useEffect(() => {
     fetchStats();
@@ -254,16 +255,60 @@ export default function HomePage() {
                 <p style={{ color: 'var(--text-muted)' }}>The search ran across {scanResult.totalSearchResults} candidates, but no pages passed the overlap threshold.</p>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                {scanResult.copies.map((copy) => (
-                  <CopyCard
-                    key={copy.url}
-                    copy={copy}
-                    copied={copiedUrl === copy.url}
-                    onCopy={() => copy.dmcaTemplate && copyTemplate(copy.url, copy.dmcaTemplate)}
-                  />
-                ))}
-              </div>
+              <>
+                <div style={{ display: 'flex', gap: 12, marginBottom: 24, borderBottom: '1px solid var(--border-glass)', paddingBottom: 16 }}>
+                  <button 
+                    onClick={() => setActiveTab('all')} 
+                    className={`btn ${activeTab === 'all' ? 'btn-primary' : 'btn-secondary'}`}
+                    style={{ padding: '8px 16px', fontSize: '0.9rem', borderRadius: '30px' }}
+                  >
+                    All Results ({scanResult.copies.length})
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('actionable')} 
+                    className={`btn ${activeTab === 'actionable' ? 'btn-primary' : 'btn-secondary'}`}
+                    style={{ padding: '8px 16px', fontSize: '0.9rem', borderRadius: '30px' }}
+                  >
+                    Actionable ({unattributedCount})
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('credited')} 
+                    className={`btn ${activeTab === 'credited' ? 'btn-primary' : 'btn-secondary'}`}
+                    style={{ padding: '8px 16px', fontSize: '0.9rem', borderRadius: '30px' }}
+                  >
+                    Credited ({scanResult.copies.length - unattributedCount})
+                  </button>
+                </div>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                  {scanResult.copies
+                    .filter(copy => {
+                      if (activeTab === 'all') return true;
+                      if (activeTab === 'actionable') return copy.verdict === 'unattributed_repost';
+                      if (activeTab === 'credited') return copy.verdict === 'credited_syndication';
+                      return true;
+                    })
+                    .map((copy) => (
+                    <CopyCard
+                      key={copy.url}
+                      copy={copy}
+                      copied={copiedUrl === copy.url}
+                      onCopy={() => copy.dmcaTemplate && copyTemplate(copy.url, copy.dmcaTemplate)}
+                    />
+                  ))}
+                  
+                  {/* Empty state for tabs */}
+                  {activeTab !== 'all' && scanResult.copies.filter(copy => {
+                    if (activeTab === 'actionable') return copy.verdict === 'unattributed_repost';
+                    if (activeTab === 'credited') return copy.verdict === 'credited_syndication';
+                    return false;
+                  }).length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
+                      No {activeTab} results found.
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </section>
         </div>
