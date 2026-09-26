@@ -1032,67 +1032,97 @@ body::after {
 /* ===================== FOOTER ===================== */
 
 .site-footer {
-  margin-top: 80px;
-  padding: 40px 0;
-  border-top: 1px solid var(--border-glass);
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  margin-top: 100px;
+  padding: 48px 0;
+  position: relative;
+  background: rgba(3, 0, 15, 0.6);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border-top: 1px solid transparent;
+}
+
+/* Glowing top border for footer */
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(6, 182, 212, 0.3) 25%,
+    rgba(168, 85, 247, 0.4) 50%,
+    rgba(6, 182, 212, 0.3) 75%,
+    transparent 100%
+  );
 }
 
 .site-footer-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .site-footer-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text-main);
+  gap: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.site-footer-brand img {
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2), 0 0 12px var(--accent-glow-cyan);
 }
 
 .site-footer-tagline {
-  font-size: 0.8rem;
-  color: var(--text-muted);
+  font-size: 0.85rem;
+  color: var(--text-subtle);
   margin: 0;
+  letter-spacing: 0.01em;
 }
 
 .site-footer-tagline a {
-  color: var(--accent-secondary);
+  color: var(--text-muted);
+  font-weight: 500;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 .site-footer-tagline a:hover {
-  color: var(--accent-primary);
+  color: var(--accent-secondary);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .site-footer-links {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
+  gap: 12px;
+  font-size: 0.85rem;
+  background: rgba(255,255,255,0.03);
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-glass);
 }
 
 .site-footer-links a {
   color: var(--text-muted);
   text-decoration: none;
-  transition: color 0.2s;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
 .site-footer-links a:hover {
   color: var(--text-main);
+  text-shadow: 0 0 8px rgba(255,255,255,0.3);
 }
 
 .site-footer-dot {
-  color: var(--text-subtle);
+  color: var(--border-glass);
 }
