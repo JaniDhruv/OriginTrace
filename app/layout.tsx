@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Outfit, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-sans' });
 const jbMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
@@ -37,7 +38,7 @@ export default function RootLayout({
         <header className="header">
           <div className="header-inner">
             <Link href="/" className="header-logo">
-              <span className="header-logo-icon">OT</span>
+              <Image src="/logo.jpg?v=2" alt="OriginTrace" width={40} height={40} className="header-logo-img" unoptimized />
               OriginTrace
             </Link>
             <nav className="header-nav">
@@ -50,7 +51,7 @@ export default function RootLayout({
         <footer className="site-footer">
           <div className="site-footer-inner">
             <div className="site-footer-brand">
-              <span className="header-logo-icon" style={{ width: 24, height: 24, fontSize: '0.6rem' }}>OT</span>
+              <Image src="/logo.jpg" alt="OriginTrace" width={24} height={24} className="header-logo-img" style={{ borderRadius: 6 }} />
               <span>OriginTrace</span>
             </div>
             <p className="site-footer-tagline">

@@ -5,7 +5,11 @@
   <img src="https://img.shields.io/badge/TypeScript-5-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
 </p>
 
-<h1 align="center">🔍 OriginTrace</h1>
+<p align="center">
+  <img src="public/logo.jpg" alt="OriginTrace Logo" width="200" />
+</p>
+
+<h1 align="center">OriginTrace</h1>
 
 <p align="center">
   <strong>An AI-powered content provenance agent that protects your intellectual property.</strong><br/>
