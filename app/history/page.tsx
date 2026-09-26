@@ -3,38 +3,29 @@ import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
-interface HistoryCheck {
+interface HistoryArticle {
   _id: string;
-  checkedUrl: string;
-  verdict: string;
-  checkedAt: string;
-  matchedArticle: {
-    title: string;
-    canonicalUrl: string;
-  } | null;
+  title: string;
+  canonicalUrl: string;
+  authorName: string | null;
+  totalChecks: number;
+  actionableCount: number;
+  lastCheckedAt: string;
 }
 
-async function getHistory(): Promise<HistoryCheck[]> {
-  const query = `*[_type == "provenanceCheck"] | order(checkedAt desc)[0...50] {
+async function getHistory(): Promise<HistoryArticle[]> {
+  const query = `*[_type == "article" && count(*[_type == "provenanceCheck" && matchedArticle._ref == ^._id]) > 0] {
     _id,
-    checkedUrl,
-    verdict,
-    checkedAt,
-    "matchedArticle": matchedArticle->{
-      title,
-      canonicalUrl
-    }
-  }`;
+    title,
+    canonicalUrl,
+    "authorName": author->name,
+    "totalChecks": count(array::unique(*[_type == "provenanceCheck" && matchedArticle._ref == ^._id].checkedUrl)),
+    "actionableCount": count(array::unique(*[_type == "provenanceCheck" && matchedArticle._ref == ^._id && verdict == 'unattributed_repost'].checkedUrl)),
+    "lastCheckedAt": *[_type == "provenanceCheck" && matchedArticle._ref == ^._id] | order(checkedAt desc)[0].checkedAt
+  } | order(lastCheckedAt desc)[0...50]`;
 
   return sanityReadClient.fetch(query);
 }
-
-const VERDICT_STYLES: Record<string, { label: string; class: string }> = {
-  original: { label: 'Original', class: 'safe' },
-  credited_syndication: { label: 'Credited', class: 'safe' },
-  unattributed_repost: { label: 'Takedown', class: 'danger' },
-  no_match: { label: 'No Match', class: 'neutral' },
-};
 
 export default async function HistoryPage() {
   const history = await getHistory();
@@ -43,9 +34,9 @@ export default async function HistoryPage() {
     <div className="container page" style={{ paddingTop: '80px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
         <div>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Scan <span className="text-gradient">History</span></h1>
+          <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Scan <span className="text-gradient">Ledger</span></h1>
           <p style={{ color: 'var(--text-muted)' }}>
-            Recent provenance checks executed on the OriginTrace network.
+            All DEV.to posts that have been scanned and tracked on OriginTrace.
           </p>
         </div>
         <div className="badge neutral">Live Network</div>
@@ -64,47 +55,48 @@ export default async function HistoryPage() {
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {history.map((check) => {
-            const vStyle = VERDICT_STYLES[check.verdict] || VERDICT_STYLES.no_match;
-            
-            return (
-              <div key={check._id} className={`result-card ${vStyle.class}`}>
-                <div className="result-card-inner" style={{ padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
-                  <div style={{ flex: 1, minWidth: '300px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '6px' }}>
-                      <div className={`verdict-badge ${vStyle.class}`} style={{ padding: '4px 10px', fontSize: '0.65rem' }}>
-                        {vStyle.class === 'danger' && <span className="verdict-badge-dot" />}
-                        {vStyle.label}
-                      </div>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                        {new Date(check.checkedAt).toLocaleString()}
-                      </span>
-                    </div>
-                    
-                    <div style={{ marginTop: '8px' }}>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px', fontWeight: 600 }}>Scanned URL</div>
-                      <a href={check.checkedUrl} target="_blank" rel="noopener noreferrer" className="result-url text-gradient" style={{ fontSize: '0.95rem' }}>
-                        {check.checkedUrl}
-                      </a>
-                    </div>
+          {history.map((article, i) => (
+            <div key={article._id} className="result-card safe" style={{ animationDelay: `${i * 0.05}s` }}>
+              <div className="result-card-inner" style={{ padding: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
+                
+                <div style={{ flex: 1, minWidth: '300px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                    <div className="badge safe" style={{ padding: '4px 10px', fontSize: '0.65rem' }}>Tracked Post</div>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                      Last scan: {new Date(article.lastCheckedAt).toLocaleString()}
+                    </span>
                   </div>
                   
-                  {check.matchedArticle && (
-                    <div style={{ flex: 1, minWidth: '250px', borderLeft: '1px solid var(--border-glass)', paddingLeft: '20px' }}>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px', fontWeight: 600 }}>Original Match</div>
-                      <div className="result-title" style={{ fontSize: '0.9rem', marginBottom: '2px' }}>{check.matchedArticle.title}</div>
+                  <div className="result-title" style={{ fontSize: '1.2rem', marginBottom: '4px' }}>
+                    {article.title}
+                  </div>
+                  <a href={article.canonicalUrl} target="_blank" rel="noopener noreferrer" className="result-url" style={{ fontSize: '0.9rem' }}>
+                    {article.canonicalUrl}
+                  </a>
+                </div>
+                
+                <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)' }}>{article.totalChecks}</div>
+                    <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Copies Found</div>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: article.actionableCount > 0 ? 'var(--color-repost)' : 'var(--text-main)' }}>
+                      {article.actionableCount}
                     </div>
-                  )}
+                    <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>Actionable</div>
+                  </div>
                   
-                  <div>
-                    <Link href={`/check/${check._id}`} className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+                  <div style={{ paddingLeft: '20px', borderLeft: '1px solid var(--border-glass)' }}>
+                    <Link href={`/report/${article._id}`} className="btn btn-secondary">
                       View Report ↗
                     </Link>
                   </div>
                 </div>
+                
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
     </div>
