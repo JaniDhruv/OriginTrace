@@ -27,7 +27,7 @@ export default function RootLayout({
               OriginTrace
             </Link>
             <nav className="header-nav">
-              <Link href="/">Check</Link>
+              <Link href="/">Scan</Link>
               <Link href="/portfolio">Portfolio</Link>
             </nav>
           </div>
