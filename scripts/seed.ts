@@ -192,6 +192,18 @@ async function seed() {
   const firstArticle = articles[0];
   const authorId = `author-${DEVTO_HANDLE}`;
 
+  // Create or update user document
+  const userId = `user-${DEVTO_HANDLE}`;
+  console.log(`\nCreating user profile for: ${firstArticle.user.name}`);
+  await client.createOrReplace({
+    _id: userId,
+    _type: 'user',
+    name: firstArticle.user.name,
+    email: `${DEVTO_HANDLE}@example.com`,
+    authId: `auth-${DEVTO_HANDLE}`,
+    avatarUrl: firstArticle.user.profile_image,
+  });
+
   console.log(`\nCreating author: ${firstArticle.user.name} (@${DEVTO_HANDLE})`);
 
   await client.createOrReplace({
@@ -223,6 +235,7 @@ async function seed() {
         canonicalUrl: article.url,
         platform: 'devto',
         author: { _type: 'reference', _ref: authorId },
+        user: { _type: 'reference', _ref: userId },
         tags: article.tag_list || [],
       });
 
