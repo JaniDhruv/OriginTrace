@@ -61,6 +61,19 @@ export default function HomePage() {
   const [scanPhase, setScanPhase] = useState(0);
   const [activeTab, setActiveTab] = useState<'all' | 'actionable' | 'credited'>('all');
   const phaseIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scanning && scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [scanning]);
+
+  useEffect(() => {
+    if (scanResult && scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [scanResult]);
 
   useEffect(() => { fetchStats(); }, []);
 
@@ -190,8 +203,10 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* RADAR + PROGRESS STEPS */}
-        {scanning && (
+        {/* SCROLL TARGET REF */}
+        <div ref={scrollRef} style={{ scrollMarginTop: '100px' }}>
+          {/* RADAR + PROGRESS STEPS */}
+          {scanning && (
           <div className="scanner-overlay">
             <div className="radar-container">
               <div className="radar-circle" />
@@ -222,6 +237,7 @@ export default function HomePage() {
             </div>
           </div>
         )}
+        </div>
       </section>
 
       {/* =================== RESULTS =================== */}
