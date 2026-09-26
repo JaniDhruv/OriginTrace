@@ -56,7 +56,7 @@ interface RecentCheck {
 const VERDICT_LABELS: Record<string, string> = {
   original: 'Original',
   credited_syndication: 'Credited republish',
-  unattributed_repost: 'Missing attribution',
+  unattributed_repost: 'Actionable Takedown',
   no_match: 'No match',
 };
 
@@ -68,6 +68,7 @@ export default function HomePage() {
   const [stats, setStats] = useState({ articles: 0, checks: 0, reposts: 0 });
   const [recentChecks, setRecentChecks] = useState<RecentCheck[]>([]);
   const [copiedUrl, setCopiedUrl] = useState('');
+  const [scanPhase, setScanPhase] = useState(0);
 
   useEffect(() => {
     fetchStats();
@@ -123,6 +124,12 @@ export default function HomePage() {
     setScanning(true);
     setScanResult(null);
     setError('');
+    setScanPhase(1);
+
+    // Mock progress phases for UX
+    const phaseInterval = setInterval(() => {
+      setScanPhase(p => (p < 3 ? p + 1 : p));
+    }, 2000);
 
     try {
       const res = await fetch('/api/scan', {
@@ -140,7 +147,9 @@ export default function HomePage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Scan failed');
     } finally {
+      clearInterval(phaseInterval);
       setScanning(false);
+      setScanPhase(0);
     }
   }
 
@@ -158,109 +167,94 @@ export default function HomePage() {
 
   return (
     <div className="container page">
-      <section className="section">
-        <div className="card" style={{ padding: 32 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 24, alignItems: 'flex-start', marginBottom: 24, flexWrap: 'wrap' }}>
-            <div>
-              <p className="text-secondary" style={{ fontSize: '0.8125rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: 8 }}>
-                Dev.to duplicate scanner
-              </p>
-              <h1>Find copied posts and missing attribution</h1>
-              <p className="text-secondary" style={{ marginTop: 10, maxWidth: 680 }}>
-                Paste your original Dev.to post. OriginTrace searches the web, checks overlap with Sanity-backed reconciliation, and drafts takedown evidence for unattributed reposts.
-              </p>
-            </div>
-            <div style={{ textAlign: 'right', flexShrink: 0 }}>
-              <div className="stat-value" style={{ fontSize: '1.75rem' }}>{stats.reposts}</div>
-              <div className="stat-label">reposts caught</div>
-            </div>
-          </div>
+      {/* Dynamic Hero Section */}
+      <section className="hero">
+        <h1>Protect Your <span className="text-gradient">Intellectual Property</span></h1>
+        <p>
+          OriginTrace uses advanced heuristics to find plagiarized content across the web. 
+          Enter your original article below to detect unattributed copies and instantly generate DMCA takedowns.
+        </p>
 
-          <form onSubmit={handleScan} className="input-group">
-            <input
-              type="text"
-              className="input"
-              placeholder="dev.to/username/original-post"
-              value={devToUrl}
-              onChange={(event) => setDevToUrl(event.target.value)}
-              required
-              disabled={scanning}
-              aria-label="Original Dev.to post URL"
-            />
-            <button type="submit" className="btn btn-primary" disabled={scanning || !devToUrl.trim()}>
-              {scanning ? <><span className="spinner" /> Scanning...</> : 'Scan post'}
-            </button>
-          </form>
+        <form onSubmit={handleScan} className="input-group">
+          <input
+            type="text"
+            className="input"
+            placeholder="dev.to/username/original-post"
+            value={devToUrl}
+            onChange={(event) => setDevToUrl(event.target.value)}
+            required
+            disabled={scanning}
+            aria-label="Original Dev.to post URL"
+          />
+          <button type="submit" className="btn btn-primary" disabled={scanning || !devToUrl.trim()}>
+            {scanning ? 'Scanning...' : 'Scan Post'}
+          </button>
+        </form>
 
-          {scanning && (
-            <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
-              {['Fetch original', 'Search web', 'Compare overlap', 'Draft DMCA'].map((step) => (
-                <div key={step} style={{ padding: 12, border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-                  {step}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {error && (
-        <section className="section">
-          <div className="card" style={{ borderColor: 'rgba(248,81,73,0.45)', color: 'var(--color-repost)' }}>
+        {error && (
+          <div style={{ marginTop: 24, display: 'inline-block' }} className="badge danger">
             {error}
           </div>
-        </section>
-      )}
+        )}
 
+        {/* Dynamic Terminal Progress Loader */}
+        {scanning && (
+          <div className="scanning-status">
+            <div className={`status-pill ${scanPhase >= 1 ? 'active' : ''}`}>
+              {scanPhase === 1 ? <span className="spinner" /> : null}
+              Fetching original
+            </div>
+            <div className={`status-pill ${scanPhase >= 2 ? 'active' : ''}`}>
+              {scanPhase === 2 ? <span className="spinner" /> : null}
+              Querying Serper
+            </div>
+            <div className={`status-pill ${scanPhase >= 3 ? 'active' : ''}`}>
+              {scanPhase === 3 ? <span className="spinner" /> : null}
+              Comparing overlap
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* High-End Dashboard Results */}
       {scanResult && (
-        <>
+        <div style={{ animation: 'fadeUp 0.6s ease-out forwards' }}>
           <section className="section">
-            <div className="card" style={{ padding: 32 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 24, marginBottom: 24, flexWrap: 'wrap' }}>
-                <div>
-                  <h2>{scanResult.article.title}</h2>
-                  <a href={scanResult.article.canonicalUrl} target="_blank" rel="noopener noreferrer" className="text-mono" style={{ display: 'inline-block', marginTop: 8 }}>
-                    {scanResult.article.canonicalUrl}
-                  </a>
-                  <p className="text-secondary" style={{ marginTop: 8, fontSize: '0.875rem' }}>
-                    {scanResult.article.authorName || 'Author not detected'} - {formatDate(scanResult.article.publishedAt)}
-                  </p>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(88px, 1fr))', gap: 12, width: 'min(100%, 340px)' }}>
-                  <Metric label="search hits" value={scanResult.totalSearchResults} />
-                  <Metric label="copies" value={scanResult.copies.length} />
-                  <Metric label="actionable" value={unattributedCount} danger={unattributedCount > 0} />
-                </div>
+            <h2 style={{ marginBottom: 24, textAlign: 'center' }}>
+              Scan Report: <span className="text-gradient">{scanResult.article.title}</span>
+            </h2>
+            
+            <div className="metrics-grid">
+              <div className="metric-card">
+                <div className="metric-value">{scanResult.totalSearchResults}</div>
+                <div className="metric-label">Search Hits</div>
               </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
-                <div style={{ padding: 14, background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)' }}>
-                  <div className="stat-label">Sanity analysis</div>
-                  <div style={{ fontWeight: 600 }}>{scanResult.sanityAnalysis.engine}</div>
+              <div className="metric-card">
+                <div className="metric-value">{scanResult.copies.length}</div>
+                <div className="metric-label">Copies Found</div>
+              </div>
+              <div className="metric-card" style={{ borderColor: unattributedCount > 0 ? 'var(--color-repost)' : 'var(--border-glass)' }}>
+                <div className="metric-value" style={{ background: unattributedCount > 0 ? 'var(--color-repost)' : 'inherit', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  {unattributedCount}
                 </div>
-                <div style={{ padding: 14, background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)' }}>
-                  <div className="stat-label">Attribution rule</div>
-                  <div style={{ fontWeight: 600 }}>Author name + original link required</div>
-                </div>
+                <div className="metric-label">Actionable Takedowns</div>
               </div>
             </div>
           </section>
 
-          {scanResult.copies.length === 0 ? (
-            <section className="section">
-              <div className="card" style={{ textAlign: 'center', padding: 40 }}>
-                <h3>No duplicated reposts found</h3>
-                <p className="text-secondary" style={{ marginTop: 8 }}>
-                  The search ran, but no candidate page passed the overlap threshold.
-                </p>
+          <section className="section">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+              <h2>Duplicate & Republish Results</h2>
+              <div className="badge safe">Sanity-Backed Reconciliation</div>
+            </div>
+
+            {scanResult.copies.length === 0 ? (
+              <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: 10 }}>Clean Bill of Health!</h3>
+                <p style={{ color: 'var(--text-muted)' }}>The search ran across {scanResult.totalSearchResults} candidates, but no pages passed the overlap threshold.</p>
               </div>
-            </section>
-          ) : (
-            <section className="section">
-              <div className="section-header">
-                <h2>Duplicate And Republish Results</h2>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                 {scanResult.copies.map((copy) => (
                   <CopyCard
                     key={copy.url}
@@ -270,55 +264,27 @@ export default function HomePage() {
                   />
                 ))}
               </div>
-            </section>
-          )}
-        </>
+            )}
+          </section>
+        </div>
       )}
 
-      <section className="section">
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-value">{stats.articles}</div>
-            <div className="stat-label">Originals indexed</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{stats.checks}</div>
-            <div className="stat-label">Checks run</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{stats.reposts}</div>
-            <div className="stat-label">Missing attribution</div>
-          </div>
-        </div>
-      </section>
-
-      {recentChecks.length > 0 && (
-        <section className="section">
-          <div className="section-header">
-            <h2>Recent Checks</h2>
-          </div>
-          <div className="article-list">
-            {recentChecks.map((check) => (
-              <Link
-                key={check._id}
-                href={`/check/${check._id}`}
-                className="article-item"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div className="article-title">{check.checkedTitle || check.checkedUrl}</div>
-                  <p className="text-mono" style={{ color: 'var(--text-tertiary)', fontSize: '0.75rem', marginTop: 4 }}>
-                    {check.checkedUrl}
-                  </p>
-                </div>
-                <div className="article-meta">
-                  <span className={`verdict-badge verdict-${check.verdict}`}>
-                    {VERDICT_LABELS[check.verdict] || check.verdict}
-                  </span>
-                  <span>{formatDate(check.checkedAt)}</span>
-                </div>
-              </Link>
-            ))}
+      {/* Global Stats Section */}
+      {!scanResult && !scanning && (
+        <section className="section" style={{ marginTop: 60 }}>
+          <div className="metrics-grid" style={{ opacity: 0.6, transform: 'scale(0.95)' }}>
+            <div className="metric-card">
+              <div className="metric-value">{stats.articles}</div>
+              <div className="metric-label">Originals Indexed</div>
+            </div>
+            <div className="metric-card">
+              <div className="metric-value">{stats.checks}</div>
+              <div className="metric-label">Checks Run</div>
+            </div>
+            <div className="metric-card">
+              <div className="metric-value">{stats.reposts}</div>
+              <div className="metric-label">Plagiarisms Caught</div>
+            </div>
           </div>
         </section>
       )}
@@ -326,16 +292,9 @@ export default function HomePage() {
   );
 }
 
-function Metric({ label, value, danger = false }: { label: string; value: number; danger?: boolean }) {
-  return (
-    <div style={{ padding: 14, background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
-      <div className="stat-value" style={{ fontSize: '1.5rem', color: danger ? 'var(--color-repost)' : 'var(--text-primary)' }}>
-        {value}
-      </div>
-      <div className="stat-label">{label}</div>
-    </div>
-  );
-}
+// ---------------------------------------------------------------------------
+// Components
+// ---------------------------------------------------------------------------
 
 function CopyCard({
   copy,
@@ -348,95 +307,70 @@ function CopyCard({
 }) {
   const attribution = copy.attribution;
   const isActionable = copy.verdict === 'unattributed_repost';
+  const cardClass = isActionable ? 'report-card danger' : 'report-card syndicated';
 
   return (
-    <div className="card" style={{ padding: 24, borderColor: isActionable ? 'rgba(248,81,73,0.35)' : 'rgba(88,166,255,0.3)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 16 }}>
-        <div style={{ flex: 1 }}>
-          <a href={copy.url} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, fontSize: '1.05rem' }}>
+    <div className={cardClass}>
+      <div className="report-header">
+        <div>
+          <a href={copy.url} target="_blank" rel="noopener noreferrer" className="report-title text-gradient" style={{ display: 'block' }}>
             {copy.title}
           </a>
-          <p className="text-mono" style={{ color: 'var(--text-tertiary)', fontSize: '0.75rem', marginTop: 4, wordBreak: 'break-word' }}>
+          <a href={copy.url} target="_blank" rel="noopener noreferrer" className="report-url">
             {copy.url}
-          </p>
+          </a>
         </div>
-        <span className={`verdict-badge verdict-${copy.verdict}`} style={{ flexShrink: 0 }}>
+        <div className={`badge ${isActionable ? 'danger' : 'safe'}`}>
           {VERDICT_LABELS[copy.verdict] || copy.verdict}
-        </span>
+        </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 12, marginBottom: 16 }}>
-        <Evidence label="Duplicated content" value={`${copy.overlapPercent}%`} danger={isActionable} />
-        <Evidence label="Author name" value={attribution?.hasAuthorName ? 'Present' : 'Missing'} danger={!attribution?.hasAuthorName} />
-        <Evidence label="Original post link" value={attribution?.hasOriginalLink ? 'Present' : 'Missing'} danger={!attribution?.hasOriginalLink} />
-        <Evidence label="Found date" value={copy.foundDate ? formatDate(copy.foundDate) : 'Unknown'} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16, marginBottom: 20 }}>
+        <div>
+          <div className="metric-label" style={{ fontSize: '0.75rem' }}>Duplicated Content</div>
+          <div style={{ fontSize: '1.25rem', fontWeight: 700, color: isActionable ? 'var(--color-repost)' : 'var(--text-main)' }}>
+            {copy.overlapPercent}%
+          </div>
+        </div>
+        <div>
+          <div className="metric-label" style={{ fontSize: '0.75rem' }}>Found Date</div>
+          <div style={{ fontSize: '1.1rem', fontWeight: 600 }}>
+            {copy.foundDate ? formatDate(copy.foundDate) : 'Unknown'}
+          </div>
+        </div>
+        <div style={{ gridColumn: 'span 2' }}>
+          <div className="metric-label" style={{ fontSize: '0.75rem' }}>Attribution Analysis</div>
+          <div style={{ fontSize: '1rem', marginTop: 4, lineHeight: '1.4' }}>
+            {attribution?.isProperlyAttributed 
+              ? <span style={{ color: 'var(--color-original)' }}>Properly attributed with author name and link.</span>
+              : attribution?.missing.length === 2
+                ? <span style={{ color: 'var(--color-repost)' }}>Missing both original author name and original post link.</span>
+                : attribution?.missing.includes('original author name')
+                  ? <span style={{ color: 'var(--color-repost)' }}>Links to the original post, but missing the original author name.</span>
+                  : <span style={{ color: 'var(--color-repost)' }}>Mentions the author name, but missing a link to the original post.</span>}
+          </div>
+        </div>
       </div>
 
       {copy.snippet && (
-        <p className="text-secondary" style={{ fontSize: '0.875rem', fontStyle: 'italic', marginBottom: 14 }}>
-          &quot;{copy.snippet}&quot;
-        </p>
-      )}
-
-      {attribution && (
-        <div style={{ padding: 14, background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', marginBottom: 14 }}>
-          <div className="stat-label">Attribution evidence</div>
-          <p style={{ marginTop: 4, fontSize: '0.875rem', lineHeight: '1.5' }}>
-            {attribution.isProperlyAttributed 
-              ? 'Properly attributed with original author name and post link.'
-              : attribution.missing.length === 2
-                ? 'Missing both original author name and original post link.'
-                : attribution.missing.includes('original author name')
-                  ? 'Links to the original post, but missing the original author name.'
-                  : 'Mentions the author name, but missing a link to the original post.'}
+        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px 16px', borderRadius: '8px', borderLeft: '2px solid rgba(255,255,255,0.1)', marginBottom: 20 }}>
+          <p style={{ fontSize: '0.9rem', fontStyle: 'italic', color: 'var(--text-muted)' }}>
+            "{copy.snippet}"
           </p>
         </div>
       )}
 
-      {copy.matchedPassages.length > 0 && (
-        <details style={{ marginBottom: copy.dmcaTemplate ? 16 : 0 }}>
-          <summary style={{ cursor: 'pointer', color: 'var(--color-accent)', fontSize: '0.875rem', fontWeight: 600 }}>
-            Matched passages ({copy.matchedPassages.length})
-          </summary>
-          <div style={{ marginTop: 12 }}>
-            {copy.matchedPassages.map((passage, index) => (
-              <div key={index} className="diff-container" style={{ marginBottom: 12 }}>
-                <div className="diff-panel">
-                  <div className="diff-panel-header">Original Dev.to post</div>
-                  <div className="diff-text">{passage.original}</div>
-                </div>
-                <div className="diff-panel">
-                  <div className="diff-panel-header">Found copy</div>
-                  <div className="diff-text">{passage.found}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </details>
-      )}
-
       {copy.dmcaTemplate && (
-        <div className="credit-request">
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center', marginBottom: 12 }}>
-            <h3 style={{ fontSize: '1rem' }}>DMCA complaint template</h3>
-            <button className="copy-btn" onClick={onCopy} type="button">
-              {copied ? 'Copied' : 'Copy'}
+        <div className="dmca-box">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <h3 style={{ fontSize: '1rem', color: 'var(--text-main)' }}>DMCA Takedown Template Generated</h3>
+            <button className="btn btn-primary" style={{ padding: '6px 16px', fontSize: '0.85rem' }} onClick={onCopy} type="button">
+              {copied ? 'Copied!' : 'Copy to Clipboard'}
             </button>
           </div>
           <pre>{copy.dmcaTemplate}</pre>
         </div>
       )}
-    </div>
-  );
-}
-
-function Evidence({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
-  return (
-    <div style={{ padding: 12, background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)' }}>
-      <div className="stat-label">{label}</div>
-      <div style={{ fontWeight: 700, color: danger ? 'var(--color-repost)' : 'var(--text-primary)' }}>
-        {value}
-      </div>
     </div>
   );
 }

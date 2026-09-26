@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
+import { Outfit, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Link from 'next/link';
+
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-sans' });
+const jbMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
   title: 'OriginTrace — Content Provenance Agent',
@@ -14,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${outfit.variable} ${jbMono.variable}`}>
       <body>
         <header className="header">
           <div className="header-inner">

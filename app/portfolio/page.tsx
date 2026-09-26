@@ -36,57 +36,50 @@ export default async function PortfolioPage() {
 
   return (
     <div className="container page">
-      <div className="section-header">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
         <div>
-          <h1>Indexed Portfolio</h1>
-          <p className="text-secondary" style={{ marginTop: 4 }}>
-            {articles.length} articles in the Knowledge Base
+          <h1>Indexed <span className="text-gradient">Portfolio</span></h1>
+          <p style={{ color: 'var(--text-muted)', marginTop: 8 }}>
+            {articles.length} canonical articles stored in the Sanity Knowledge Base
           </p>
         </div>
       </div>
 
       {articles.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: 48 }}>
-          <p className="text-secondary">
+        <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
+          <p style={{ color: 'var(--text-muted)' }}>
             No articles indexed yet. Run the seed script to import your DEV.to posts.
           </p>
-          <code className="text-mono" style={{ display: 'block', marginTop: 12 }}>
+          <code style={{ display: 'block', marginTop: 16, fontFamily: 'var(--font-mono)', color: 'var(--accent-secondary)' }}>
             DEVTO_HANDLE=yourhandle npm run seed
           </code>
         </div>
       ) : (
-        <div className="article-list">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {articles.map((article) => (
-            <div key={article._id} className="article-item">
+            <div key={article._id} className="report-card safe" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ flex: 1 }}>
-                <div className="article-title">{article.title}</div>
-                <div style={{ marginTop: 4, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <div className="report-title">{article.title}</div>
+                <div style={{ marginTop: 8, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  <span className="badge safe">{PLATFORM_LABELS[article.platform] || article.platform}</span>
                   {article.tags?.map((tag) => (
-                    <span
-                      key={tag}
-                      style={{
-                        fontSize: '0.75rem',
-                        padding: '2px 8px',
-                        background: 'var(--bg-tertiary)',
-                        borderRadius: 'var(--radius-sm)',
-                        color: 'var(--text-secondary)',
-                      }}
-                    >
+                    <span key={tag} className="badge" style={{ background: 'var(--bg-overlay)' }}>
                       #{tag}
                     </span>
                   ))}
                 </div>
               </div>
-              <div className="article-meta">
-                <span>{PLATFORM_LABELS[article.platform] || article.platform}</span>
-                <span>{new Date(article.publishedAt).toLocaleDateString()}</span>
+              
+              <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-end' }}>
+                <div style={{ fontWeight: 600 }}>{new Date(article.publishedAt).toLocaleDateString()}</div>
                 <a
                   href={article.canonicalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontSize: '0.8125rem' }}
+                  className="btn btn-primary"
+                  style={{ padding: '8px 16px', fontSize: '0.85rem' }}
                 >
-                  View original ↗
+                  View Original ↗
                 </a>
               </div>
             </div>
