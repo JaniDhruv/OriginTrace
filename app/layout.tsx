@@ -3,6 +3,7 @@ import { Outfit, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Link from 'next/link';
 import Image from 'next/image';
+import NavLinks from './NavLinks';
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-sans' });
 const jbMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
@@ -41,10 +42,7 @@ export default function RootLayout({
               <Image src="/logo.jpg?v=2" alt="OriginTrace" width={40} height={40} className="header-logo-img" unoptimized />
               OriginTrace
             </Link>
-            <nav className="header-nav">
-              <Link href="/">Scan</Link>
-              <Link href="/history">History</Link>
-            </nav>
+            <NavLinks />
           </div>
         </header>
         <main>{children}</main>
