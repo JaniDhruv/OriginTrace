@@ -65,6 +65,13 @@ export const article = defineType({
       to: [{ type: 'author' }],
     }),
     defineField({
+      name: 'user',
+      title: 'User (Owner)',
+      type: 'reference',
+      to: [{ type: 'user' }],
+      description: 'The user account who claims/owns this canonical article.',
+    }),
+    defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',

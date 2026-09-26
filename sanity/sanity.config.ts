@@ -1,6 +1,6 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
-import { article, author, provenanceCheck } from './schemas';
+import { article, author, provenanceCheck, user } from './schemas';
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '';
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
@@ -12,6 +12,6 @@ export default defineConfig({
   dataset,
   plugins: [structureTool()],
   schema: {
-    types: [article, author, provenanceCheck],
+    types: [user, article, author, provenanceCheck],
   },
 });

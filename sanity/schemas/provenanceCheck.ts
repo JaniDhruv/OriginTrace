@@ -24,6 +24,13 @@ export const provenanceCheck = defineType({
       description: 'The canonical article this content matches, if any.',
     }),
     defineField({
+      name: 'user',
+      title: 'User',
+      type: 'reference',
+      to: [{ type: 'user' }],
+      description: 'The user who initiated this scan.',
+    }),
+    defineField({
       name: 'verdict',
       title: 'Verdict',
       type: 'string',
