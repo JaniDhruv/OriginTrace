@@ -28,6 +28,7 @@ export default function RootLayout({
             </Link>
             <nav className="header-nav">
               <Link href="/">Scan</Link>
+              <Link href="/history">History</Link>
             </nav>
           </div>
         </header>

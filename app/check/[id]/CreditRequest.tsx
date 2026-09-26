@@ -31,54 +31,39 @@ export function CreditRequest({
 }) {
   const [copied, setCopied] = useState(false);
   const message = dmcaTemplate || buildFallbackTemplate({
-    originalTitle,
-    originalUrl,
-    originalDate,
-    checkedUrl,
-    checkedTitle,
-    overlapPercent,
-    attribution,
-    authorName,
+    originalTitle, originalUrl, originalDate, checkedUrl,
+    checkedTitle, overlapPercent, attribution, authorName,
   });
 
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(message);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch {
-      const textarea = document.createElement('textarea');
-      textarea.value = message;
-      document.body.appendChild(textarea);
-      textarea.select();
+      const ta = document.createElement('textarea');
+      ta.value = message;
+      document.body.appendChild(ta);
+      ta.select();
       document.execCommand('copy');
-      document.body.removeChild(textarea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      document.body.removeChild(ta);
     }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
-    <div className="credit-request">
-      <pre>{message}</pre>
-      <div style={{ marginTop: 12, textAlign: 'right' }}>
-        <button className="copy-btn" onClick={handleCopy} type="button">
-          {copied ? 'Copied' : 'Copy to clipboard'}
-        </button>
-      </div>
-    </div>
+    <button
+      className={`copy-btn ${copied ? 'copied' : ''}`}
+      onClick={handleCopy}
+      type="button"
+    >
+      {copied ? '✓ Copied!' : '⎘ Copy to Clipboard'}
+    </button>
   );
 }
 
 function buildFallbackTemplate({
-  originalTitle,
-  originalUrl,
-  originalDate,
-  checkedUrl,
-  checkedTitle,
-  overlapPercent,
-  attribution,
-  authorName,
+  originalTitle, originalUrl, originalDate, checkedUrl,
+  checkedTitle, overlapPercent, attribution, authorName,
 }: {
   originalTitle: string;
   originalUrl: string;
@@ -90,9 +75,7 @@ function buildFallbackTemplate({
   authorName?: string | null;
 }) {
   const date = new Date(originalDate).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    year: 'numeric', month: 'long', day: 'numeric',
   });
 
   return `Subject: DMCA takedown notice - unauthorized copy of "${originalTitle}"
@@ -116,6 +99,7 @@ OriginTrace found approximately ${overlapPercent || 0}% duplicated content.
 Missing attribution: ${attribution?.missing?.join(', ') || 'original author name and original post link'}.
 Author name present on republished page: ${attribution?.hasAuthorName ? 'yes' : 'no'}.
 Original post link present on republished page: ${attribution?.hasOriginalLink ? 'yes' : 'no'}.
+Evidence passages: [attach screenshots, copied excerpts, or export from OriginTrace]
 
 I have a good faith belief that use of the copyrighted material described above is not authorized by the copyright owner, its agent, or the law.
 
