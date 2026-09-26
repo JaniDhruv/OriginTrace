@@ -25,6 +25,40 @@
 
 ---
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="public/screenshots/hero.png" alt="OriginTrace Hero UI" width="800" />
+  <br><em>Premium glassmorphism hero interface for initiating a content provenance scan.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/scanning.png" alt="Animated Radar Scanner" width="800" />
+  <br><em>Real-time animated radar scanner showing the active AI agents executing the provenance check.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/results.png" alt="Scan Results Report" width="800" />
+  <br><em>Actionable scan report detailing total copies found, attribution status, and missing evidence.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/report.png" alt="Credited Republish Detection" width="800" />
+  <br><em>Intelligent detection correctly identifying properly attributed cross-posts versus stolen content.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/aggregated_report.png" alt="Aggregated Content Report" width="800" />
+  <br><em>Sharable aggregated report pages tracking all discovered copies for a specific DEV.to article, complete with DMCA generation capabilities.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/ledger.png" alt="Global Scan Ledger" width="800" />
+  <br><em>The Global Scan Ledger powered by Sanity, showing a historical record of tracked DEV.to posts.</em>
+</p>
+
+---
+
 ## 🎯 The Problem
 
 Every day, developer blog posts are scraped, republished, and monetized across content farms — **without credit, without links, without permission**. Most authors never find out. The ones who do face hours of manual Googling, evidence collection, and drafting DMCA notices.
