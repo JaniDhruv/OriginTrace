@@ -25,29 +25,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     );
 
     if (!article) {
-      return { title: 'Report Not Found — OriginTrace' };
+      return { title: 'Report Not Found' };
     }
 
-    const title = `${totalCopies} copies found — "${article.title}" | OriginTrace`;
+    const shortTitle = article.title.length > 40 ? article.title.slice(0, 40) + '…' : article.title;
+    const title = `${totalCopies} copies of "${shortTitle}"`;
     const description = `OriginTrace found ${totalCopies} copies of "${article.title}" by ${article.authorName || 'Unknown'}. ${actionable} require DMCA takedowns.`;
 
     return {
       title,
       description,
       openGraph: {
-        title,
+        title: `OriginTrace — ${title}`,
         description,
         siteName: 'OriginTrace',
         type: 'article',
       },
       twitter: {
         card: 'summary',
-        title: `${totalCopies} copies found — OriginTrace Report`,
+        title: `OriginTrace — ${title}`,
         description,
       },
     };
   } catch {
-    return { title: 'OriginTrace Report' };
+    return { title: 'Aggregated Report' };
   }
 }
 

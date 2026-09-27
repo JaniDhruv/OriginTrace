@@ -9,7 +9,10 @@ const outfit = Outfit({ subsets: ['latin'], variable: '--font-sans' });
 const jbMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: 'OriginTrace — Content Provenance Agent',
+  title: {
+    template: 'OriginTrace — %s',
+    default: 'OriginTrace — Scan for Plagiarism',
+  },
   description:
     'AI-powered plagiarism detection for developer blog posts. Paste a DEV.to URL — OriginTrace crawls the web for stolen copies and generates DMCA takedown notices. Built on Sanity Content Lake.',
   openGraph: {

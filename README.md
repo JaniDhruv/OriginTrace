@@ -283,8 +283,6 @@ OriginTrace uses a **dark-mode glassmorphism** design language with neon accent 
 - **Micro-interactions**: Staggered card entrance animations, animated number counters, hover glows
 - **Color System**: Neon cyan (`#38bdf8`) for safe/credited, red (`#ef4444`) for actionable takedowns
 
-> **Note**: Authentication is intentionally omitted for demo purposes. In production, JWT/NextAuth would gate the scan and history features per-user. The current "Live Network" design showcases a global public ledger where all scans are visible — similar to a blockchain explorer for content provenance.
-
 ---
 
 ## 📁 Project Structure
@@ -340,6 +338,25 @@ Sanity isn't just a database here — it's the **knowledge base** that the agent
 3. **Evidence Persistence**: Every provenance check — including the verdict, overlap percentage, attribution evidence, matched passages, and DMCA template — is stored back in Sanity as a `provenanceCheck` document linked to the original article. This creates an auditable chain of evidence.
 
 4. **Querying**: The History Ledger and Aggregated Reports are powered by GROQ queries that aggregate provenance checks by article, count unique URLs, and surface actionable takedowns — all directly from the Content Lake.
+
+---
+
+## 🔮 Future Enhancements
+
+OriginTrace is a fully functional prototype built in hackathon scope. Here's where it could go next:
+
+| Enhancement | Description |
+|---|---|
+| **🌐 Multi-Platform Support** | Extend beyond DEV.to — support Hashnode, Medium, personal blogs, and any RSS feed as canonical sources |
+| **🔐 User Authentication** | Add NextAuth/JWT login so each author has their own private dashboard and scan history |
+| **👤 Per-User History** | Replace the current global "Live Network" ledger with personal scan histories tied to authenticated accounts |
+| **📬 Automated Monitoring** | Cron-based re-scanning — get email/Slack alerts when new copies appear for your tracked articles |
+| **🤖 LLM-Powered Analysis** | Use Gemini/GPT to detect paraphrased plagiarism (rewritten content that evades word-overlap detection) |
+| **📊 Analytics Dashboard** | Visualize plagiarism trends over time — charts showing copy frequency, top offending domains, etc. |
+| **🔗 Direct DMCA Filing** | Integrate with Google's DMCA form and hosting provider abuse APIs for one-click takedown submissions |
+| **🧩 Browser Extension** | Chrome/Firefox extension that lets you scan any page you're reading to check if it's stolen content |
+
+> **Note**: Authentication is intentionally omitted for demo purposes. The current "Live Network" design showcases a global public ledger where all scans are visible — similar to a blockchain explorer for content provenance. In production, JWT/NextAuth would gate the scan and history features per-user.
 
 ---
 
