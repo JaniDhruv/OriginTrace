@@ -50,6 +50,12 @@ body {
   color: var(--text-main);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 a { color: var(--accent-secondary); text-decoration: none; transition: color 0.2s var(--ease); }
