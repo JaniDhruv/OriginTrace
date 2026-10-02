@@ -32,7 +32,7 @@ export async function fetchAndExtract(url: string): Promise<ExtractedContent | n
         'User-Agent': 'OriginTrace/1.0 (Content Provenance Checker)',
         'Accept': 'text/html,application/xhtml+xml',
       },
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!response.ok) {

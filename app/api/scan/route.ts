@@ -160,7 +160,7 @@ async function inspectCandidateCopies(
   const originalKey = comparableUrl(article.canonicalUrl);
   const topResults = searchResults
     .filter((result) => result.link && comparableUrl(result.link) !== originalKey)
-    .slice(0, 20);
+    .slice(0, 8);
 
   const checks = topResults.map(async (result) => {
     try {
