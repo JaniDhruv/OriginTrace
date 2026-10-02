@@ -162,14 +162,15 @@ async function inspectCandidateCopies(
     .filter((result) => result.link && comparableUrl(result.link) !== originalKey)
     .slice(0, 8);
 
-  const checks = topResults.map(async (result) => {
+  // Process sequentially to avoid JSDOM memory spikes on Vercel
+  for (const result of topResults) {
     try {
       const extracted = await fetchAndExtract(result.link);
-      if (!extracted || !extracted.text || extracted.text.length < 100) return null;
-      if (comparableUrl(extracted.url) === originalKey) return null;
+      if (!extracted || !extracted.text || extracted.text.length < 100) continue;
+      if (comparableUrl(extracted.url) === originalKey) continue;
 
       const verdictResult = interpretVerdict(extracted, [article]);
-      if (verdictResult.verdict === 'no_match' || verdictResult.verdict === 'original') return null;
+      if (verdictResult.verdict === 'no_match' || verdictResult.verdict === 'original') continue;
 
       const overlapPercent = Math.min(100, Math.max(0, Math.round(verdictResult.confidence * 100)));
       const matchedPassages = verdictResult.reconciledEntries.slice(0, 3).map((entry) => ({
@@ -205,7 +206,7 @@ async function inspectCandidateCopies(
         dmcaTemplate,
       });
 
-      return {
+      copies.push({
         url: result.link,
         title,
         snippet: result.snippet,
@@ -216,16 +217,10 @@ async function inspectCandidateCopies(
         matchedPassages,
         foundDate,
         checkedAt,
-      };
+      });
     } catch (err) {
       console.error(`Failed to check ${result.link}:`, err);
-      return null;
     }
-  });
-
-  const resolved = await Promise.all(checks);
-  for (const c of resolved) {
-    if (c) copies.push(c);
   }
 
   return copies;
