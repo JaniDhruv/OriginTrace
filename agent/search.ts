@@ -125,16 +125,14 @@ export function extractSearchPhrases(text: string, title: string): string[] {
 
   if (sentences.length === 0) return phrases;
 
-  // Pick from beginning, middle, and end of article
+  // Pick from beginning and middle of article
   const picks = [
     0,
-    Math.floor(sentences.length * 0.3),
-    Math.floor(sentences.length * 0.6),
-    sentences.length - 1,
+    Math.floor(sentences.length * 0.5),
   ];
 
   for (const idx of picks) {
-    if (idx >= 0 && idx < sentences.length && phrases.length < 5) {
+    if (idx >= 0 && idx < sentences.length && phrases.length < 3) {
       const sentence = sentences[idx];
       // Trim to ~12 words for a focused search query
       const words = sentence.split(/\s+/).slice(0, 12).join(' ');
@@ -144,5 +142,5 @@ export function extractSearchPhrases(text: string, title: string): string[] {
     }
   }
 
-  return phrases.slice(0, 5);
+  return phrases.slice(0, 3);
 }

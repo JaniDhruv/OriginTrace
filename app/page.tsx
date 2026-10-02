@@ -124,7 +124,13 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ devToUrl: targetUrl }),
       });
-      const data = await res.json();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error('Scan timed out — the article may have too many results. Please try again.');
+      }
       if (!res.ok) throw new Error(data.error || 'Scan failed');
       setScanResult(data);
       fetchStats();

@@ -160,7 +160,7 @@ async function inspectCandidateCopies(
   const originalKey = comparableUrl(article.canonicalUrl);
   const topResults = searchResults
     .filter((result) => result.link && comparableUrl(result.link) !== originalKey)
-    .slice(0, 8);
+    .slice(0, 5);
 
   // Process sequentially to avoid JSDOM memory spikes on Vercel
   for (const result of topResults) {
