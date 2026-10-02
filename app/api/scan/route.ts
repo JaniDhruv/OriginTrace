@@ -6,8 +6,6 @@ import { fetchAndExtract, fetchAndExtractLight, type ExtractedContent } from '@/
 import { interpretVerdict, type AttributionReport } from '@/agent/verdict';
 import { generateDMCATemplate } from '@/agent/dmca';
 
-export const maxDuration = 300; // Render has no hard limit, but good practice
-
 interface CanonicalArticle {
   _id: string;
   title: string;
