@@ -6,7 +6,7 @@ import { fetchAndExtract, fetchAndExtractLight, type ExtractedContent } from '@/
 import { interpretVerdict, type AttributionReport } from '@/agent/verdict';
 import { generateDMCATemplate } from '@/agent/dmca';
 
-export const maxDuration = 60; // Max allowed for Vercel Hobby
+export const maxDuration = 300; // Render has no hard limit, but good practice
 
 interface CanonicalArticle {
   _id: string;
@@ -160,7 +160,7 @@ async function inspectCandidateCopies(
   const originalKey = comparableUrl(article.canonicalUrl);
   const topResults = searchResults
     .filter((result) => result.link && comparableUrl(result.link) !== originalKey)
-    .slice(0, 5);
+    .slice(0, 15);
 
   // Process sequentially to avoid JSDOM memory spikes on Vercel
   for (const result of topResults) {

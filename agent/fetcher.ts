@@ -33,7 +33,7 @@ export async function fetchAndExtract(url: string): Promise<ExtractedContent | n
         'User-Agent': 'OriginTrace/1.0 (Content Provenance Checker)',
         'Accept': 'text/html,application/xhtml+xml',
       },
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(10000),
     });
 
     if (!response.ok) {
@@ -103,7 +103,7 @@ export async function fetchAndExtractLight(url: string): Promise<ExtractedConten
         'User-Agent': 'OriginTrace/1.0 (Content Provenance Checker)',
         'Accept': 'text/html,application/xhtml+xml',
       },
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(10000),
     });
 
     if (!response.ok) return null;
