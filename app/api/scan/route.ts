@@ -6,6 +6,8 @@ import { fetchAndExtract, type ExtractedContent } from '@/agent/fetcher';
 import { interpretVerdict, type AttributionReport } from '@/agent/verdict';
 import { generateDMCATemplate } from '@/agent/dmca';
 
+export const maxDuration = 60; // Max allowed for Vercel Hobby
+
 interface CanonicalArticle {
   _id: string;
   title: string;
