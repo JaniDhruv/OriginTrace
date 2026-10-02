@@ -4,6 +4,7 @@ import './globals.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import NavLinks from './NavLinks';
+import { Analytics } from "@vercel/analytics/next";
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-sans' });
 const jbMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
@@ -76,6 +77,7 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
