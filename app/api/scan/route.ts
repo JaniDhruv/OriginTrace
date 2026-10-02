@@ -2,7 +2,7 @@ import { createHash } from 'crypto';
 import { NextResponse } from 'next/server';
 import { sanityClient, sanityReadClient } from '@/sanity/client';
 import { findPotentialCopies, extractSearchPhrases } from '@/agent/search';
-import { fetchAndExtract, type ExtractedContent } from '@/agent/fetcher';
+import { fetchAndExtract, fetchAndExtractLight, type ExtractedContent } from '@/agent/fetcher';
 import { interpretVerdict, type AttributionReport } from '@/agent/verdict';
 import { generateDMCATemplate } from '@/agent/dmca';
 
@@ -165,7 +165,7 @@ async function inspectCandidateCopies(
   // Process sequentially to avoid JSDOM memory spikes on Vercel
   for (const result of topResults) {
     try {
-      const extracted = await fetchAndExtract(result.link);
+      const extracted = await fetchAndExtractLight(result.link);
       if (!extracted || !extracted.text || extracted.text.length < 100) continue;
       if (comparableUrl(extracted.url) === originalKey) continue;
 

@@ -23,7 +23,8 @@ export interface ExtractedContent {
 }
 
 /**
- * Fetch a URL and extract its main textual content.
+ * Fetch a URL and extract its main textual content (full quality, uses JSDOM + Readability).
+ * Use this only for the original DEV.to article.
  */
 export async function fetchAndExtract(url: string): Promise<ExtractedContent | null> {
   try {
@@ -87,6 +88,60 @@ export async function fetchAndExtract(url: string): Promise<ExtractedContent | n
     };
   } catch (err) {
     console.error(`Fetch/extract error for ${url}:`, err);
+    return null;
+  }
+}
+
+/**
+ * Lightweight fetch+extract for candidate pages — Cheerio only, no JSDOM.
+ * ~10-50x less memory than fetchAndExtract. Safe for Vercel serverless.
+ */
+export async function fetchAndExtractLight(url: string): Promise<ExtractedContent | null> {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'OriginTrace/1.0 (Content Provenance Checker)',
+        'Accept': 'text/html,application/xhtml+xml',
+      },
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (!response.ok) return null;
+
+    const html = await response.text();
+    const $ = cheerio.load(html);
+
+    const publishDate = extractPublishDate($);
+    const author = extractAuthor($);
+
+    // Extract outbound links
+    const outboundLinks: string[] = [];
+    $('a[href]').each((_, el) => {
+      const href = $(el).attr('href');
+      if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
+        outboundLinks.push(href);
+      }
+    });
+
+    // Strip noise elements
+    $('script, style, nav, footer, header, aside, iframe, noscript, svg, [role="navigation"], [role="banner"], .sidebar, .comments, .ad, .advertisement').remove();
+
+    // Try article/main first, fall back to body
+    let text = $('article').text() || $('main').text() || $('[role="main"]').text() || $('body').text();
+    text = text.replace(/\s+/g, ' ').trim();
+
+    if (!text || text.length < 50) return null;
+
+    return {
+      title: $('title').text().trim() || $('h1').first().text().trim() || url,
+      text: text.slice(0, 30000),
+      publishDate,
+      author,
+      url,
+      outboundLinks,
+      rawHtml: html.slice(0, 50000),
+    };
+  } catch {
     return null;
   }
 }
