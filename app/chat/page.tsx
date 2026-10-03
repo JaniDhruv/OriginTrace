@@ -2,6 +2,7 @@
 
 import { useChat } from '@ai-sdk/react';
 import { useRef, useEffect, useState } from 'react';
+import styles from './chat.module.css';
 
 export default function ChatPage() {
   const chatContext: any = useChat();
@@ -29,21 +30,21 @@ export default function ChatPage() {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-screen bg-[#050505] text-white">
+    <div className={styles.container}>
       {/* Header */}
-      <header className="py-6 px-8 border-b border-white/10 glass-panel z-10 sticky top-0">
-        <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-teal-400 to-emerald-500 bg-clip-text text-transparent">
+      <header className={styles.header}>
+        <h1 className={styles.title}>
           OriginTrace Agent
         </h1>
-        <p className="text-sm text-gray-400 mt-1">
+        <p className={styles.subtitle}>
           Ask questions about your scanned articles. Powered by Sanity Context MCP.
         </p>
       </header>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-8 space-y-6">
+      <div className={styles.chatArea}>
         {messages.length === 0 && (
-          <div className="flex items-center justify-center h-full text-gray-500">
+          <div className={styles.emptyState}>
             <p>Ask me how many copies were found, or request a DMCA template!</p>
           </div>
         )}
@@ -51,23 +52,23 @@ export default function ChatPage() {
         {messages.map((m: any) => (
           <div
             key={m.id}
-            className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`${styles.messageRow} ${m.role === 'user' ? styles.messageRowUser : styles.messageRowAgent}`}
           >
             <div
-              className={`max-w-[80%] rounded-2xl px-6 py-4 ${
+              className={`${styles.messageBubble} ${
                 m.role === 'user'
-                  ? 'bg-gradient-to-br from-teal-500 to-emerald-600 text-white shadow-lg'
-                  : 'bg-white/5 border border-white/10 text-gray-200'
+                  ? styles.messageBubbleUser
+                  : styles.messageBubbleAgent
               }`}
             >
-              <div className="font-semibold text-xs opacity-75 mb-1 uppercase tracking-wider">
+              <div className={styles.messageRole}>
                 {m.role === 'user' ? 'You' : 'Agent'}
               </div>
-              <div className="whitespace-pre-wrap leading-relaxed">
+              <div className={styles.messageContent}>
                 {m.content}
                 {m.toolInvocations?.map((toolInvocation: any) => (
-                  <div key={toolInvocation.toolCallId} className="mt-3 text-xs bg-black/40 rounded p-2 border border-white/5 text-gray-400">
-                    <span className="text-teal-400 font-mono">[{toolInvocation.toolName}]</span> 
+                  <div key={toolInvocation.toolCallId} className={styles.toolInvocation}>
+                    <span className={styles.toolName}>[{toolInvocation.toolName}]</span> 
                     {' '}status: {toolInvocation.state}
                   </div>
                 ))}
@@ -79,19 +80,19 @@ export default function ChatPage() {
       </div>
 
       {/* Input Area */}
-      <div className="p-6 border-t border-white/10 bg-black/50 backdrop-blur-md">
-        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto relative">
+      <div className={styles.inputArea}>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <input
             value={input}
             onChange={handleInputChange}
             placeholder="e.g. Which article has the highest overlap percentage?"
-            className="w-full bg-white/5 border border-white/10 rounded-full py-4 pl-6 pr-32 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 transition-all shadow-inner"
+            className={styles.input}
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="absolute right-2 top-2 bottom-2 px-6 bg-teal-500 hover:bg-teal-400 text-white rounded-full font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className={styles.submitBtn}
           >
             {isLoading ? 'Thinking...' : 'Send'}
           </button>
