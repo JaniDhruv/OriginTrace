@@ -1,6 +1,6 @@
 'use client';
 
-import { useChat } from 'ai/react';
+import { useChat } from '@ai-sdk/react';
 import { useRef, useEffect } from 'react';
 
 export default function ChatPage() {
@@ -31,7 +31,7 @@ export default function ChatPage() {
           </div>
         )}
         
-        {messages.map((m) => (
+        {messages.map((m: any) => (
           <div
             key={m.id}
             className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -48,7 +48,7 @@ export default function ChatPage() {
               </div>
               <div className="whitespace-pre-wrap leading-relaxed">
                 {m.content}
-                {m.toolInvocations?.map((toolInvocation) => (
+                {m.toolInvocations?.map((toolInvocation: any) => (
                   <div key={toolInvocation.toolCallId} className="mt-3 text-xs bg-black/40 rounded p-2 border border-white/5 text-gray-400">
                     <span className="text-teal-400 font-mono">[{toolInvocation.toolName}]</span> 
                     {' '}status: {toolInvocation.state}

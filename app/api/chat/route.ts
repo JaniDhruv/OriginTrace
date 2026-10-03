@@ -1,7 +1,7 @@
 import { createMCPClient } from '@ai-sdk/mcp';
 import { streamText } from 'ai';
 import { google } from '@ai-sdk/google';
-import EventSource from 'eventsource';
+import { EventSource } from 'eventsource';
 
 export const maxDuration = 60;
 
@@ -41,11 +41,11 @@ export async function POST(req: Request) {
       model: google('gemini-1.5-pro'),
       messages,
       tools,
-      maxSteps: 10,
+      maxToolRoundtrips: 10,
     });
 
     // The stream will keep resolving tool calls until the agent answers the question
-    return result.toDataStreamResponse();
+    return result.toTextStreamResponse();
   } catch (error: any) {
     console.error('MCP Chat Error:', error);
     return new Response(error.message, { status: 500 });

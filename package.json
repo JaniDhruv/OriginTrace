@@ -12,6 +12,7 @@
   "dependencies": {
     "@ai-sdk/google": "^4.0.87",
     "@ai-sdk/mcp": "^2.0.66",
+    "@ai-sdk/react": "^4.0.130",
     "@mozilla/readability": "^0.5.0",
     "@sanity/client": "^7.0.0",
     "ai": "^7.0.127",
