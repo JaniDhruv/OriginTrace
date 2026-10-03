@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
     // 3. Stream the response from Gemini using the MCP tools
     const result = streamText({
-      model: google('gemini-3.5-pro'),
+      model: google('gemini-3.8-flash'),
       messages,
       tools,
     });

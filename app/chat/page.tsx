@@ -76,6 +76,18 @@ export default function ChatPage() {
             </div>
           </div>
         ))}
+        {isLoading && (
+          <div className={`${styles.messageRow} ${styles.messageRowAgent}`}>
+            <div className={`${styles.messageBubble} ${styles.messageBubbleAgent}`}>
+              <div className={styles.messageRole}>Agent</div>
+              <div className={styles.typingIndicator}>
+                <div className={styles.typingDot}></div>
+                <div className={styles.typingDot}></div>
+                <div className={styles.typingDot}></div>
+              </div>
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
