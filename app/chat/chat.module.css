@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 80px); /* Adjusting for navbar */
+  height: calc(100vh - 72px); /* Header is 72px */
   background-color: #050505;
   color: white;
   font-family: 'Inter', sans-serif;
@@ -36,10 +36,9 @@
 .chatArea {
   flex: 1;
   overflow-y: auto;
-  padding: 2rem;
+  padding: 2rem 0;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 }
 
 .emptyState {
@@ -53,58 +52,168 @@
 .messageRow {
   display: flex;
   width: 100%;
+  padding: 1.5rem 2rem;
+}
+
+.messageRowInner {
+  display: flex;
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
 }
 
 .messageRowUser {
   justify-content: flex-end;
 }
 
+.messageRowUser .messageRowInner {
+  justify-content: flex-end;
+}
+
 .messageRowAgent {
+  justify-content: flex-start;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.messageRowAgent .messageRowInner {
   justify-content: flex-start;
 }
 
 .messageBubble {
-  max-width: 80%;
-  border-radius: 1rem;
-  padding: 1rem 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  border-radius: 1.5rem;
+  font-size: 1rem;
 }
 
 .messageBubbleUser {
-  background: linear-gradient(to bottom right, #14b8a6, #059669);
-  color: white;
-  border-bottom-right-radius: 0.25rem;
+  background: #2f2f2f;
+  color: #f3f4f6;
+  border-bottom-right-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  max-width: 85%;
 }
 
 .messageBubbleAgent {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
   color: #e5e7eb;
-  border-bottom-left-radius: 0.25rem;
+  padding: 0;
+  border-radius: 0;
 }
 
-.messageRole {
+.agentHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.agentAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #14b8a6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+.agentName {
   font-weight: 600;
-  font-size: 0.75rem;
-  opacity: 0.75;
-  margin-bottom: 0.25rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 1rem;
+  color: #f3f4f6;
 }
 
 .messageContent {
-  white-space: pre-wrap;
+  white-space: normal;
   line-height: 1.6;
 }
 
-.toolInvocation {
-  margin-top: 0.75rem;
-  font-size: 0.75rem;
-  background: rgba(0, 0, 0, 0.4);
+.messageContent p {
+  margin-bottom: 1rem;
+}
+
+.messageContent p:last-child {
+  margin-bottom: 0;
+}
+
+.messageContent strong {
+  color: #fff;
+}
+
+.messageContent a {
+  color: #2dd4bf;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.messageContent h1,
+.messageContent h2,
+.messageContent h3,
+.messageContent h4 {
+  color: #fff;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.messageContent h1 { font-size: 1.5rem; }
+.messageContent h2 { font-size: 1.25rem; }
+.messageContent h3 { font-size: 1.1rem; }
+
+.messageContent ul,
+.messageContent ol {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.messageContent li {
+  margin-bottom: 0.25rem;
+}
+
+.messageContent code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
-  padding: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: monospace;
+  font-size: 0.875em;
+  color: #5eead4;
+}
+
+.messageContent pre {
+  background: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.messageContent pre code {
+  background: none;
+  padding: 0;
+  color: #e5e7eb;
+}
+
+.toolInvocation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #9ca3af;
+  width: fit-content;
 }
 
 .toolName {

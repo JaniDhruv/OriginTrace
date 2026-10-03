@@ -25,6 +25,8 @@
     "next-sanity": "^13.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "sanity": "^6.15.0",
     "sanity-plugin-asset-source-unsplash": "^7.0.25"
   },

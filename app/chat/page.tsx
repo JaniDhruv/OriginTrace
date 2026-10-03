@@ -2,6 +2,8 @@
 
 import { useChat } from '@ai-sdk/react';
 import { useRef, useEffect, useState, type ChangeEvent } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import styles from './chat.module.css';
 
 export default function ChatPage() {
@@ -46,11 +48,16 @@ export default function ChatPage() {
         
         {error && (
           <div className={`${styles.messageRow} ${styles.messageRowAgent}`}>
-            <div className={`${styles.messageBubble} ${styles.messageBubbleAgent}`}>
-              <div className={styles.messageRole}>Agent</div>
-              <div className={styles.messageContent}>
-                {error.message}
-                <button type="button" onClick={clearError} className={styles.retryBtn}>Dismiss</button>
+            <div className={styles.messageRowInner}>
+              <div className={`${styles.messageBubble} ${styles.messageBubbleAgent}`}>
+                <div className={styles.agentHeader}>
+                  <div className={styles.agentAvatar}>AI</div>
+                  <div className={styles.agentName}>OriginTrace</div>
+                </div>
+                <div className={styles.messageContent}>
+                  {error.message}
+                  <button type="button" onClick={clearError} className={styles.retryBtn}>Dismiss</button>
+                </div>
               </div>
             </div>
           </div>
@@ -60,44 +67,56 @@ export default function ChatPage() {
             key={m.id}
             className={`${styles.messageRow} ${m.role === 'user' ? styles.messageRowUser : styles.messageRowAgent}`}
           >
-            <div
-              className={`${styles.messageBubble} ${
-                m.role === 'user'
-                  ? styles.messageBubbleUser
-                  : styles.messageBubbleAgent
-              }`}
-            >
-              <div className={styles.messageRole}>
-                {m.role === 'user' ? 'You' : 'Agent'}
-              </div>
-              <div className={styles.messageContent}>
-                {m.parts.map((part, i) => {
-                  if (part.type === 'text') return <span key={i}>{part.text}</span>;
-                  if (part.type === 'dynamic-tool') {
-                    return (
-                      <div key={part.toolCallId} className={styles.toolInvocation}>
-                        <span className={styles.toolName}>Sanity Context MCP</span>
-                        {' '}{part.toolName.replaceAll('_', ' ')}: {part.state}
-                      </div>
-                    );
-                  }
-                  if (part.type === 'source-url') {
-                    return <a key={part.sourceId} href={part.url} target="_blank" rel="noreferrer">{part.title || part.url}</a>;
-                  }
-                  return null;
-                })}
+            <div className={styles.messageRowInner}>
+              <div
+                className={`${styles.messageBubble} ${
+                  m.role === 'user'
+                    ? styles.messageBubbleUser
+                    : styles.messageBubbleAgent
+                }`}
+              >
+                {m.role !== 'user' && (
+                  <div className={styles.agentHeader}>
+                    <div className={styles.agentAvatar}>AI</div>
+                    <div className={styles.agentName}>OriginTrace</div>
+                  </div>
+                )}
+                <div className={styles.messageContent}>
+                  {m.parts.map((part, i) => {
+                    if (part.type === 'text') {
+                      return <ReactMarkdown key={i} remarkPlugins={[remarkGfm]}>{part.text}</ReactMarkdown>;
+                    }
+                    if (part.type === 'dynamic-tool') {
+                      return (
+                        <div key={part.toolCallId} className={styles.toolInvocation}>
+                          <span className={styles.toolName}>🛠 Sanity Context MCP</span>
+                          {' '}{part.toolName.replaceAll('_', ' ')}: {part.state}
+                        </div>
+                      );
+                    }
+                    if (part.type === 'source-url') {
+                      return <a key={part.sourceId} href={part.url} target="_blank" rel="noreferrer">{part.title || part.url}</a>;
+                    }
+                    return null;
+                  })}
+                </div>
               </div>
             </div>
           </div>
         ))}
         {isLoading && (
           <div className={`${styles.messageRow} ${styles.messageRowAgent}`}>
-            <div className={`${styles.messageBubble} ${styles.messageBubbleAgent}`}>
-              <div className={styles.messageRole}>Agent</div>
-              <div className={styles.typingIndicator}>
-                <div className={styles.typingDot}></div>
-                <div className={styles.typingDot}></div>
-                <div className={styles.typingDot}></div>
+            <div className={styles.messageRowInner}>
+              <div className={`${styles.messageBubble} ${styles.messageBubbleAgent}`}>
+                <div className={styles.agentHeader}>
+                  <div className={styles.agentAvatar}>AI</div>
+                  <div className={styles.agentName}>OriginTrace</div>
+                </div>
+                <div className={styles.typingIndicator}>
+                  <div className={styles.typingDot}></div>
+                  <div className={styles.typingDot}></div>
+                  <div className={styles.typingDot}></div>
+                </div>
               </div>
             </div>
           </div>

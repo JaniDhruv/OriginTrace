@@ -49,33 +49,6 @@ export default function RootLayout({
           </div>
         </header>
         <main>{children}</main>
-        <footer className="site-footer">
-          <div className="site-footer-inner">
-            <div className="site-footer-brand">
-              <Image src="/logo.jpg?v=2" alt="OriginTrace" width={28} height={28} className="header-logo-img" style={{ width: 28, height: 28, borderRadius: '50%' }} unoptimized />
-              <span style={{ fontWeight: 700, background: 'linear-gradient(135deg, #e2e8f0 0%, var(--accent-secondary) 60%, var(--accent-primary) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>OriginTrace</span>
-            </div>
-            <p className="site-footer-tagline">
-              Built for the{' '}
-              <a href="https://dev.to/challenges/sanity-2026-09-16" target="_blank" rel="noopener noreferrer">
-                Sanity AI Challenge 2026
-              </a>{' '}
-              · Powered by{' '}
-              <a href="https://www.sanity.io" target="_blank" rel="noopener noreferrer">
-                Sanity Content Lake
-              </a>
-            </p>
-            <div className="site-footer-links">
-              <a href="https://github.com/JaniDhruv/OriginTrace" target="_blank" rel="noopener noreferrer">
-                GitHub
-              </a>
-              <span className="site-footer-dot">·</span>
-              <a href="https://dev.to/dj29" target="_blank" rel="noopener noreferrer">
-                DEV.to
-              </a>
-            </div>
-          </div>
-        </footer>
       </body>
     </html>
   );
