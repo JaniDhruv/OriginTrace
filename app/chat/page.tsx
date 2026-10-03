@@ -31,7 +31,7 @@ export default function ChatPage() {
       {/* Header */}
       <header className={styles.header}>
         <h1 className={styles.title}>
-          OriginTrace Agent
+          OriginTrace Agent <span className={styles.betaBadge}>BETA</span>
         </h1>
         <p className={styles.subtitle}>
           Ask questions about your scanned articles. Powered by Sanity Context MCP.
@@ -41,8 +41,22 @@ export default function ChatPage() {
       {/* Chat Area */}
       <div className={styles.chatArea}>
         {messages.length === 0 && (
-          <div className={styles.emptyState}>
-            <p>Ask me how many copies were found, or request a DMCA template!</p>
+          <div className={styles.heroContainer}>
+            <div className={styles.heroGlow}></div>
+            <h2 className={styles.heroTitle}>
+              What would you like to trace today?
+            </h2>
+            <div className={styles.suggestionGrid}>
+              <button onClick={() => setInput("Which article has the highest overlap percentage?")} className={styles.suggestionChip}>
+                Highest overlap percentage
+              </button>
+              <button onClick={() => setInput("Draft a DMCA takedown notice for the top offender")} className={styles.suggestionChip}>
+                Draft DMCA template
+              </button>
+              <button onClick={() => setInput("Which sites successfully credited the original author?")} className={styles.suggestionChip}>
+                Check proper attribution
+              </button>
+            </div>
           </div>
         )}
         
@@ -152,6 +166,9 @@ export default function ChatPage() {
             {isLoading ? 'Thinking...' : 'Send'}
           </button>
         </form>
+        <div className={styles.disclaimer}>
+          Agent sessions are ephemeral. Refreshing the page will clear this chat history.
+        </div>
       </div>
     </div>
   );
