@@ -13,7 +13,7 @@
 
 <p align="center">
   <strong>An AI-powered content provenance agent that protects your intellectual property.</strong><br/>
-  Paste a DEV.to article → OriginTrace crawls the web for stolen copies → generates DMCA takedowns — all backed by Sanity's Content Lake as the immutable knowledge base.
+  Paste a DEV.to article → OriginTrace crawls the web for stolen copies → chat with the AI Agent to analyze the data and generate DMCA takedowns — all backed by Sanity's Content Lake and Context MCP.
 </p>
 
 <p align="center">
@@ -26,6 +26,16 @@
 ---
 
 ## 📸 Screenshots
+
+<p align="center">
+  <img src="public/screenshots/agent_thoughts.png" alt="Agent Reasoning UI" width="800" />
+  <br><em>The AI Agent dynamically querying Sanity via Context MCP and displaying its thought process in hacker-styled reasoning blocks.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/agent_response.png" alt="Agent Chat Response" width="800" />
+  <br><em>OriginTrace streaming a highly structured, actionable response after analyzing the Sanity knowledge base.</em>
+</p>
 
 <p align="center">
   <img src="public/screenshots/hero.png" alt="OriginTrace Hero UI" width="800" />
@@ -71,6 +81,7 @@ Every day, developer blog posts are scraped, republished, and monetized across c
 
 | Feature | Description |
 |---|---|
+| **💬 AI Conversational Agent** | Chat with an advanced AI (via Vercel AI SDK) that uses Sanity Context MCP to answer complex queries about your provenance data |
 | **🔎 Web-Scale Plagiarism Detection** | Extracts distinctive phrases from your article and searches across the entire web using Serper (Google Search API) |
 | **🧠 Multi-Signal Overlap Engine** | Combines word overlap, 5-gram shingling, and longest common subsequence (LCS) for robust detection that survives reformatting |
 | **⚖️ Attribution Analysis** | Checks if reposts include the original author name, a link to the original post, and attribution phrases |
@@ -213,6 +224,7 @@ Every day, developer blog posts are scraped, republished, and monetized across c
 | Route | Description |
 |---|---|
 | `/` | Live scanner — paste a DEV.to URL, watch the radar animation, see results |
+| `/chat` | Premium Conversational UI — chat with the OriginTrace AI Agent |
 | `/history` | Scan Ledger — all tracked articles grouped by post, with copy counts |
 | `/report/[articleId]` | Sharable aggregated report — all copies for a specific article (tabbed: All / Actionable / Credited) |
 | `/check/[id]` | Individual check detail — full DMCA template, attribution evidence, matched passages |
