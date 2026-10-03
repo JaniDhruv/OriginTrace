@@ -41,7 +41,6 @@ export async function POST(req: Request) {
       model: google('gemini-1.5-pro'),
       messages,
       tools,
-      maxToolRoundtrips: 10,
     });
 
     // The stream will keep resolving tool calls until the agent answers the question
