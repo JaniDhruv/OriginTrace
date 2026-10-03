@@ -1,79 +1,88 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Sanity_AI_Challenge-2026-ff5733?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+PHRleHQgeT0iMTgiIGZvbnQtc2l6ZT0iMTgiPjwvdGV4dD48L3N2Zz4=" alt="Sanity AI Challenge 2026" />
-  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js 16" />
-  <img src="https://img.shields.io/badge/Sanity-Content_Lake-f36458?style=for-the-badge&logo=sanity" alt="Sanity" />
-  <img src="https://img.shields.io/badge/TypeScript-5-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-</p>
-
-<p align="center">
-  <img src="public/icon.png" alt="OriginTrace Logo" width="150" />
+  <img src="public/icon.png" alt="OriginTrace Logo" width="120" />
 </p>
 
 <h1 align="center">OriginTrace</h1>
 
 <p align="center">
-  <strong>An AI-powered content provenance agent that protects your intellectual property.</strong><br/>
-  Paste a DEV.to article → OriginTrace crawls the web for stolen copies → chat with the AI Agent to analyze the data and generate DMCA takedowns — all backed by Sanity's Content Lake and Context MCP.
+  <strong>AI-Powered Content Plagiarism Detective &amp; DMCA Agent</strong><br/>
+  Built for <a href="https://dev.to/challenges/sanity-2026-09-16">Path One: Ship an Agent That Queries Real Content</a> — Sanity Challenge 2026
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Sanity_Challenge-2026-ff5733?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+PHRleHQgeT0iMTgiIGZvbnQtc2l6ZT0iMTgiPjwvdGV4dD48L3N2Zz4=" alt="Sanity AI Challenge 2026" />
+  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js 16" />
+  <img src="https://img.shields.io/badge/Sanity-Content_Lake-f36458?style=for-the-badge&logo=sanity" alt="Sanity" />
+  <img src="https://img.shields.io/badge/NVIDIA-NIM-76b900?style=for-the-badge&logo=nvidia" alt="NVIDIA NIM" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+</p>
+
+<p align="center">
+  <a href="https://origintrace.onrender.com">Live Demo</a> ·
   <a href="https://github.com/JaniDhruv/OriginTrace">GitHub</a> ·
   <a href="#-how-it-works">How It Works</a> ·
-  <a href="#-architecture">Architecture</a> ·
-  <a href="#-quick-start">Quick Start</a>
+  <a href="#-the-ai-agent">The AI Agent</a>
 </p>
+
+---
+
+## 🧠 TL;DR
+
+> Paste a DEV.to article URL → OriginTrace's programmatic pipeline crawls the web for stolen copies → structured evidence is persisted to the **Sanity Content Lake** → then chat with the **AI Agent** (powered by NVIDIA NIM + **Sanity Context MCP**) to analyze the data, determine attribution verdicts, and generate DMCA takedown notices.
+
+**Why this only works with structured content:** The agent doesn't keyword-search for answers — it queries boolean attribution flags (`hasAuthorName`, `hasOriginalLink`), exact `overlapPercent` integers, and `verdict` enums from Sanity. A keyword search would never be able to answer *"Which copycat had the highest overlap but still credited the author?"* — OriginTrace can, because the content is structured.
 
 ---
 
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="public/screenshots/agent_thoughts.png" alt="Agent Reasoning UI" width="800" />
-  <br><em>The AI Agent dynamically querying Sanity via Context MCP and displaying its thought process in hacker-styled reasoning blocks.</em>
+  <img src="public/screenshots/agent_thoughts.png" alt="AI Agent querying Sanity Context MCP" width="800" />
+  <br><em>The AI Agent dynamically querying Sanity via Context MCP, with transparent "Agent Thoughts" reasoning blocks showing its thought process in real time.</em>
 </p>
 
 <p align="center">
-  <img src="public/screenshots/agent_response.png" alt="Agent Chat Response" width="800" />
-  <br><em>OriginTrace streaming a highly structured, actionable response after analyzing the Sanity knowledge base.</em>
+  <img src="public/screenshots/agent_response.png" alt="Agent structured response with attribution analysis" width="800" />
+  <br><em>The Agent delivers a highly structured, actionable response — complete with markdown tables, attribution boolean breakdowns, and a clear verdict — all derived from the Sanity Knowledge Base.</em>
 </p>
 
 <p align="center">
-  <img src="public/screenshots/hero.png" alt="OriginTrace Hero UI" width="800" />
-  <br><em>Premium glassmorphism hero interface for initiating a content provenance scan.</em>
+  <img src="public/screenshots/hero.png" alt="OriginTrace Scanner Hero UI" width="800" />
+  <br><em>The scanner homepage — paste any DEV.to article URL and OriginTrace's programmatic pipeline crawls the web for copies.</em>
 </p>
 
 <p align="center">
   <img src="public/screenshots/scanning.png" alt="Animated Radar Scanner" width="800" />
-  <br><em>Real-time animated radar scanner showing the active AI agents executing the provenance check.</em>
+  <br><em>Real-time animated radar scanner showing active web crawling across multiple search engines.</em>
 </p>
 
 <p align="center">
   <img src="public/screenshots/results.png" alt="Scan Results Report" width="800" />
-  <br><em>Actionable scan report detailing total copies found, attribution status, and missing evidence.</em>
+  <br><em>Actionable scan report with copy counts, overlap percentages, and attribution verdicts — all persisted to Sanity.</em>
 </p>
 
 <p align="center">
-  <img src="public/screenshots/report.png" alt="Credited Republish Detection" width="800" />
-  <br><em>Intelligent detection correctly identifying properly attributed cross-posts versus stolen content.</em>
+  <img src="public/screenshots/report.png" alt="Attribution Analysis Detail" width="800" />
+  <br><em>Intelligent detection correctly distinguishing properly attributed cross-posts from stolen content using structured boolean evidence.</em>
 </p>
 
 <p align="center">
   <img src="public/screenshots/aggregated_report.png" alt="Aggregated Content Report" width="800" />
-  <br><em>Sharable aggregated report pages tracking all discovered copies for a specific DEV.to article, complete with DMCA generation capabilities.</em>
+  <br><em>Sharable aggregated report pages tracking all discovered copies for a specific DEV.to article, with DMCA generation capabilities.</em>
 </p>
 
 <p align="center">
   <img src="public/screenshots/ledger.png" alt="Global Scan Ledger" width="800" />
-  <br><em>The Global Scan Ledger powered by Sanity, showing a historical record of tracked DEV.to posts.</em>
+  <br><em>The Global Scan Ledger — a historical record of tracked DEV.to posts and their provenance status, powered by GROQ queries against the Sanity Content Lake.</em>
 </p>
 
 ---
 
 ## 🎯 The Problem
 
-Every day, developer blog posts are scraped, republished, and monetized across content farms — **without credit, without links, without permission**. Most authors never find out. The ones who do face hours of manual Googling, evidence collection, and drafting DMCA notices.
+Every day, developer blog posts are scraped, republished, and monetized across content farms — **without credit, without links, without permission**. Most authors never find out. The ones who do face hours of manual Googling, evidence collection, and drafting legal notices.
 
-**OriginTrace automates the entire pipeline** — from discovery to legal action — using Sanity as the single source of truth for content provenance.
+**OriginTrace automates the entire pipeline** — from discovery to legal action — using Sanity as the single source of truth for content provenance, and an AI Agent as the conversational interface for analyzing the evidence.
 
 ---
 
@@ -81,19 +90,137 @@ Every day, developer blog posts are scraped, republished, and monetized across c
 
 | Feature | Description |
 |---|---|
-| **💬 AI Conversational Agent** | Chat with an advanced AI (via Vercel AI SDK) that uses Sanity Context MCP to answer complex queries about your provenance data |
+| **💬 AI Conversational Agent** | Chat with an AI Agent (NVIDIA NIM via the AI SDK) that uses **Sanity Context MCP** to query your provenance data, analyze attribution booleans, and draft DMCA notices |
 | **🔎 Web-Scale Plagiarism Detection** | Extracts distinctive phrases from your article and searches across the entire web using Serper (Google Search API) |
-| **🧠 Multi-Signal Overlap Engine** | Combines word overlap, 5-gram shingling, and longest common subsequence (LCS) for robust detection that survives reformatting |
-| **⚖️ Attribution Analysis** | Checks if reposts include the original author name, a link to the original post, and attribution phrases |
+| **🧠 Multi-Signal Overlap Engine** | Combines word overlap (20%), 5-gram shingling (50%), and longest common subsequence / LCS (30%) for robust detection that survives reformatting |
+| **⚖️ Attribution Analysis** | Checks if reposts include the original author name, a link to the original post, and attribution phrases — stored as structured booleans in Sanity |
 | **📄 Instant DMCA Generator** | Auto-generates legally-structured DMCA takedown notices with evidence passages pre-filled |
 | **📚 Sanity Knowledge Base** | Every article and every provenance check is persisted in Sanity's Content Lake — creating an immutable, queryable ledger |
 | **📊 Aggregated Reports** | Sharable report pages that aggregate all copies found for a specific article across multiple scans |
 | **🕐 Scan History Ledger** | A global ledger showing all tracked articles and their plagiarism status over time |
-| **🎨 Premium Dark UI** | Glassmorphism design with animated radar scanner, staggered cards, and micro-interactions |
+| **🎨 Premium Dark UI** | Glassmorphism design with animated radar scanner, staggered cards, micro-interactions, and a full-featured chatbot UI |
 
 ---
 
-## 🧩 How It Works
+## 🤖 The AI Agent
+
+This is the core of the **Path One** submission. OriginTrace's AI Agent is not a generic chatbot — it is a specialized content provenance assistant that **only works because the content is structured**.
+
+### How It Works
+
+```
+User asks: "Which copycat had the highest overlap but still credited me?"
+                            │
+                            ▼
+              ┌──────────────────────────┐
+              │   AI Agent (NVIDIA NIM)  │
+              │   nvidia/nemotron-3.5-   │
+              │   lightning-30b-a3b      │
+              └────────────┬─────────────┘
+                           │
+                    Calls MCP tools
+                           │
+                           ▼
+              ┌──────────────────────────┐
+              │  Sanity Context MCP      │
+              │  - initial_context       │
+              │  - groq_query            │
+              └────────────┬─────────────┘
+                           │
+                 Executes GROQ queries
+                           │
+                           ▼
+              ┌──────────────────────────┐
+              │  Sanity Content Lake     │
+              │  - article documents     │
+              │  - provenanceCheck docs  │
+              │  - author references     │
+              └────────────┬─────────────┘
+                           │
+              Returns structured JSON
+                           │
+                           ▼
+              ┌──────────────────────────┐
+              │  Agent interprets:       │
+              │  • overlapPercent: 98    │
+              │  • hasAuthorName: true   │
+              │  • hasOriginalLink: true │
+              │  • verdict: credited_    │
+              │    syndication           │
+              │                          │
+              │  → "No DMCA needed."     │
+              └──────────────────────────┘
+```
+
+### Why This Needs Structured Content
+
+The agent queries **typed fields** in Sanity, not free text:
+
+| Field | Type | What The Agent Does With It |
+|---|---|---|
+| `overlapPercent` | `number` | Ranks copycats by similarity — "which has the highest?" |
+| `verdict` | `string` (enum) | Filters by `unattributed_repost` vs `credited_syndication` |
+| `attribution.hasAuthorName` | `boolean` | Determines if the copy credits the author |
+| `attribution.hasOriginalLink` | `boolean` | Determines if the copy links back |
+| `attribution.isProperlyAttributed` | `boolean` | Combined verdict on proper attribution |
+| `attribution.signals` | `string[]` | Lists what credit was found (e.g., "Links to original post URL") |
+| `attribution.missing` | `string[]` | Lists what credit is missing (e.g., "No author name") |
+| `dmcaTemplate` | `text` | Pre-generated DMCA template the agent can retrieve and customize |
+
+A keyword search would never answer *"Show me all copies above 80% overlap that are missing the author name but have the original link."* OriginTrace can, because every signal is a queryable field in Sanity.
+
+### Tech Stack (Agent)
+
+| Component | Technology |
+|---|---|
+| **AI Framework** | [AI SDK](https://sdk.vercel.ai/) (`ai` + `@ai-sdk/react` + `@ai-sdk/mcp`) |
+| **LLM** | NVIDIA NIM (`nvidia/nemotron-3.5-lightning-30b-a3b`) |
+| **MCP Bridge** | Sanity Context MCP (`@ai-sdk/mcp` with HTTP transport) |
+| **Knowledge Base** | Sanity Content Lake (GROQ-queryable structured documents) |
+| **Streaming** | Server-sent events via `streamText()` with reasoning support |
+
+---
+
+## 🔬 How Sanity Powers Everything
+
+Sanity isn't just a database here — it's the **knowledge base** that the agent actively reconciles against.
+
+### 1. Indexing (Write Path)
+When a user scans a DEV.to URL, the programmatic pipeline fetches the article, extracts its content, and persists it as a canonical `article` document in Sanity. This establishes the provenance claim.
+
+### 2. Reconciliation (Compare Path)
+When candidates are found on the web, the pipeline fetches the canonical article from Sanity and runs multi-signal overlap analysis (word overlap, 5-gram shingling, LCS) against the candidate. The Sanity document is the ground truth.
+
+### 3. Evidence Persistence (Write-Back Path)
+Every provenance check — verdict, overlap percentage, attribution evidence, matched passages, DMCA template — is stored back in Sanity as a `provenanceCheck` document linked to the original article. This creates an auditable chain of evidence.
+
+### 4. Agent Queries (Read Path via MCP)
+The AI Agent connects to Sanity Context MCP and dynamically writes GROQ queries at runtime to answer user questions. It reads the structured fields, interprets boolean flags, ranks results by overlap percentage, and generates legal templates — all grounded in the Content Lake.
+
+### Sanity Schema Design
+
+```
+┌──────────┐       ┌───────────┐       ┌──────────────────┐
+│  author  │◄──────│  article  │◄──────│ provenanceCheck  │
+│          │  ref  │           │  ref  │                  │
+│ • name   │       │ • title   │       │ • checkedUrl     │
+│ • handle │       │ • body    │       │ • verdict        │
+│ • bio    │       │ • slug    │       │ • overlapPercent │
+│          │       │ • canon.  │       │ • attribution {} │
+│          │       │ • publish │       │   .hasAuthorName │
+│          │       │ • platform│       │   .hasOrigLink   │
+│          │       │           │       │   .signals[]     │
+│          │       │           │       │   .missing[]     │
+│          │       │           │       │ • dmcaTemplate   │
+│          │       │           │       │ • reconciledEntr.│
+└──────────┘       └───────────┘       └──────────────────┘
+```
+
+**Sanity Project ID**: `iossngh3`
+
+---
+
+## 🧩 Full Pipeline
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -157,6 +284,15 @@ Every day, developer blog posts are scraped, republished, and monetized across c
               │  + DMCA template gen   │
               │  + Store in Sanity     │
               └────────────────────────┘
+                           │
+                           ▼
+              ┌────────────────────────┐
+              │  8. AI AGENT ANALYSIS  │
+              │  Chat with the agent   │
+              │  via Sanity Context    │
+              │  MCP to query, analyze │
+              │  and act on results    │
+              └────────────────────────┘
 ```
 
 ### The Three Verdicts
@@ -171,49 +307,38 @@ Every day, developer blog posts are scraped, republished, and monetized across c
 
 ## 🏗 Architecture
 
-### Tech Stack
+### Full Tech Stack
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| **Frontend** | Next.js 16 (App Router) | SSR pages, client-side scanner UI |
+| **Frontend** | Next.js 16 (App Router) | SSR pages, client-side scanner UI, chat interface |
 | **Styling** | Vanilla CSS | Glassmorphism, animations, dark theme |
 | **Typography** | Google Fonts (Outfit + JetBrains Mono) | Premium sans-serif + monospace |
 | **Knowledge Base** | Sanity Content Lake | Immutable ledger for articles + provenance checks |
+| **AI Agent LLM** | NVIDIA NIM (Nemotron 3.5) | Reasoning and response generation |
+| **Agent Framework** | AI SDK (`ai`, `@ai-sdk/react`, `@ai-sdk/mcp`) | Streaming chat, tool-use, MCP integration |
+| **MCP Bridge** | Sanity Context MCP | Connects the agent to the Sanity Knowledge Base |
 | **Web Search** | Serper.dev (Google Search API) | Discovering potential copies across the web |
 | **Content Extraction** | Mozilla Readability + Cheerio + JSDOM | Cleaning and parsing web pages |
 | **Overlap Detection** | Custom NLP engine (TypeScript) | Word overlap, n-gram shingling, LCS |
 | **DMCA Generation** | Template engine | Legal-ready takedown notices |
-
-### Sanity Schema Design
-
-```
-┌──────────┐       ┌───────────┐       ┌──────────────────┐
-│  author  │◄──────│  article  │◄──────│ provenanceCheck  │
-│          │  ref  │           │  ref  │                  │
-│ • name   │       │ • title   │       │ • checkedUrl     │
-│ • handle │       │ • body    │       │ • verdict        │
-│ • bio    │       │ • slug    │       │ • overlapPercent │
-│          │       │ • canon.  │       │ • attribution    │
-│          │       │ • publish │       │ • dmcaTemplate   │
-│          │       │ • platform│       │ • reconciledEntr.│
-└──────────┘       └───────────┘       └──────────────────┘
-```
-
-**Why Sanity?** Sanity acts as the **single source of truth** — the "knowledge base" that the agent reconciles against. When OriginTrace finds a candidate copy, it doesn't just compare strings — it queries the canonical article stored in Sanity, runs multi-signal overlap analysis, and persists the provenance check back into the Content Lake. This creates an auditable, queryable history of every plagiarism check ever run.
+| **Deployment** | Render | Production hosting |
 
 ### Agent Modules
 
 | Module | File | Responsibility |
 |---|---|---|
-| **Fetcher** | `agent/fetcher.ts` | Fetches URLs, extracts clean text via Readability, parses metadata (dates, authors, outbound links) from raw HTML |
-| **Search** | `agent/search.ts` | Extracts distinctive phrases from article body, queries Serper with quoted-phrase searches, deduplicates by URL |
+| **Fetcher** | `agent/fetcher.ts` | Fetches URLs, extracts clean text via Readability, parses metadata |
+| **Search** | `agent/search.ts` | Extracts distinctive phrases, queries Serper with quoted-phrase searches |
 | **Verdict** | `agent/verdict.ts` | Core reconciliation engine — tokenization, word overlap, 5-gram shingling, LCS ratio, attribution analysis |
-| **DMCA** | `agent/dmca.ts` | Generates legally-structured DMCA takedown templates with evidence passages and attribution gaps |
+| **DMCA** | `agent/dmca.ts` | Generates legally-structured DMCA takedown templates with evidence |
+| **MCP Client** | `agent/mcp-client.ts` | Direct Sanity Context MCP client (`initial_context`, `groq_query`) |
 
 ### API Routes
 
 | Endpoint | Method | Purpose |
 |---|---|---|
+| `/api/chat` | POST | AI Agent chat — streams responses via Sanity Context MCP |
 | `/api/scan` | POST | Full scan pipeline — fetch, search, compare, persist |
 | `/api/report/[articleId]` | GET | Aggregated report data for a specific article |
 | `/api/stats` | GET | Global platform statistics (deduplicated) |
@@ -224,10 +349,10 @@ Every day, developer blog posts are scraped, republished, and monetized across c
 | Route | Description |
 |---|---|
 | `/` | Live scanner — paste a DEV.to URL, watch the radar animation, see results |
-| `/chat` | Premium Conversational UI — chat with the OriginTrace AI Agent |
+| `/chat` | **AI Agent** — conversational interface to query Sanity provenance data |
 | `/history` | Scan Ledger — all tracked articles grouped by post, with copy counts |
-| `/report/[articleId]` | Sharable aggregated report — all copies for a specific article (tabbed: All / Actionable / Credited) |
-| `/check/[id]` | Individual check detail — full DMCA template, attribution evidence, matched passages |
+| `/report/[articleId]` | Sharable aggregated report — all copies for a specific article |
+| `/check/[id]` | Individual check detail — full DMCA template, attribution evidence |
 
 ---
 
@@ -238,6 +363,7 @@ Every day, developer blog posts are scraped, republished, and monetized across c
 - **Node.js 18+**
 - **Sanity account** — [sanity.io](https://www.sanity.io)
 - **Serper.dev API key** — [serper.dev](https://serper.dev) (free tier: 2,500 searches)
+- **NVIDIA NIM API key** — [build.nvidia.com](https://build.nvidia.com) (free inference credits)
 
 ### Setup
 
@@ -257,7 +383,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and paste any DEV.to article URL to start scanning.
+Open [http://localhost:3000](http://localhost:3000) to scan articles, and [http://localhost:3000/chat](http://localhost:3000/chat) to chat with the AI Agent.
 
 ### Optional: Seed Your DEV.to Portfolio
 
@@ -276,10 +402,12 @@ This fetches all your published DEV.to articles and indexes them in Sanity as ca
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | ✅ | Your Sanity project ID |
 | `NEXT_PUBLIC_SANITY_DATASET` | ✅ | Dataset name (default: `production`) |
 | `SANITY_API_TOKEN` | ✅ | Sanity API token with **write** access |
+| `SANITY_API_READ_TOKEN` | ✅ | Sanity API token with **read** access (for MCP auth) |
 | `SERPER_API_KEY` | ✅ | Serper.dev API key for web search |
-| `SANITY_ORG_ID` | ❌ | Sanity org ID (for Context MCP) |
+| `NIM_API_KEY` | ✅ | NVIDIA NIM API key for the AI Agent |
+| `SANITY_ORG_ID` | ❌ | Sanity org ID (for Context MCP endpoint) |
 | `SANITY_CONTEXT_API_TOKEN` | ❌ | Org-level token for Context MCP |
-| `SANITY_MCP_ENDPOINT` | ❌ | Sanity Context MCP endpoint URL |
+| `SANITY_MCP_ENDPOINT` | ❌ | Custom Sanity Context MCP endpoint URL |
 | `DEVTO_HANDLE` | ❌ | DEV.to username for portfolio seeding |
 
 ---
@@ -288,12 +416,12 @@ This fetches all your published DEV.to articles and indexes them in Sanity as ca
 
 OriginTrace uses a **dark-mode glassmorphism** design language with neon accent colors:
 
-- **Background**: Multi-layer radial gradients with a subtle grid overlay and pulse animation
+- **Background**: Multi-layer radial gradients with subtle ambient glows and pulse animations
 - **Cards**: Frosted glass panels with `backdrop-filter: blur()` and luminous borders
 - **Typography**: [Outfit](https://fonts.google.com/specimen/Outfit) (headings) + [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) (data/code)
 - **Scanner Animation**: Concentric radar circles with a rotating sweep arm — plays during live scans
-- **Micro-interactions**: Staggered card entrance animations, animated number counters, hover glows
-- **Color System**: Neon cyan (`#38bdf8`) for safe/credited, red (`#ef4444`) for actionable takedowns
+- **Chat UI**: Slide-up message animations, gradient-glow avatar, collapsible reasoning blocks, floating input bar
+- **Color System**: Neon cyan (`#2dd4bf`) for safe/credited, red (`#ef4444`) for actionable takedowns, purple (`#a78bfa`) for agent reasoning
 
 ---
 
@@ -301,21 +429,25 @@ OriginTrace uses a **dark-mode glassmorphism** design language with neon accent 
 
 ```
 OriginTrace/
-├── agent/                    # AI agent modules
+├── agent/                    # Programmatic pipeline modules
 │   ├── fetcher.ts            #   Web page fetching + content extraction
 │   ├── search.ts             #   Serper-powered web search + phrase extraction
 │   ├── verdict.ts            #   Multi-signal overlap engine + attribution analysis
 │   ├── dmca.ts               #   DMCA takedown template generator
-│   └── mcp-client.ts         #   Sanity Context MCP client (optional)
+│   └── mcp-client.ts         #   Direct Sanity Context MCP client
 │
 ├── app/                      # Next.js App Router
 │   ├── page.tsx              #   Homepage — live scanner UI
 │   ├── layout.tsx            #   Root layout + sticky navbar
-│   ├── globals.css           #   Complete design system (26KB of hand-crafted CSS)
+│   ├── globals.css           #   Complete design system (hand-crafted CSS)
+│   ├── chat/
+│   │   ├── page.tsx          #   AI Agent conversational chat interface
+│   │   └── chat.module.css   #   Premium chatbot styles
 │   ├── history/page.tsx      #   Scan Ledger — articles grouped by post
 │   ├── report/[articleId]/   #   Sharable aggregated report page
 │   ├── check/[id]/           #   Individual provenance check detail
 │   └── api/
+│       ├── chat/route.ts     #   POST — AI Agent (NIM + Sanity Context MCP)
 │       ├── scan/route.ts     #   POST — full scan pipeline
 │       ├── report/[id]/      #   GET — aggregated report data
 │       ├── stats/route.ts    #   GET — global stats (deduplicated)
@@ -326,7 +458,7 @@ OriginTrace/
 │   └── schemas/
 │       ├── article.ts        #   Canonical article document
 │       ├── author.ts         #   Author profile document
-│       ├── provenanceCheck.ts #  Provenance check record
+│       ├── provenanceCheck.ts #  Provenance check record (the core schema)
 │       └── user.ts           #   User account document
 │
 ├── scripts/
@@ -337,38 +469,19 @@ OriginTrace/
 
 ---
 
-## 🔬 How Sanity Powers the Agent
-
-This project is built for **Path One** of the Sanity AI Challenge: *Ship an Agent That Queries Real Content*.
-
-Sanity isn't just a database here — it's the **knowledge base** that the agent actively reconciles against:
-
-1. **Indexing**: When a user scans a DEV.to URL for the first time, the agent fetches the article, extracts its content, and persists it as a canonical `article` document in Sanity. This establishes the provenance claim.
-
-2. **Reconciliation**: When candidates are found on the web, the agent fetches the canonical article from Sanity and runs multi-signal overlap analysis (word overlap, 5-gram shingling, LCS) against the candidate. The Sanity document is the ground truth.
-
-3. **Evidence Persistence**: Every provenance check — including the verdict, overlap percentage, attribution evidence, matched passages, and DMCA template — is stored back in Sanity as a `provenanceCheck` document linked to the original article. This creates an auditable chain of evidence.
-
-4. **Querying**: The History Ledger and Aggregated Reports are powered by GROQ queries that aggregate provenance checks by article, count unique URLs, and surface actionable takedowns — all directly from the Content Lake.
-
----
-
 ## 🔮 Future Enhancements
-
-OriginTrace is a fully functional prototype built in hackathon scope. Here's where it could go next:
 
 | Enhancement | Description |
 |---|---|
-| **🌐 Multi-Platform Support** | Extend beyond DEV.to — support Hashnode, Medium, personal blogs, and any RSS feed as canonical sources |
-| **🔐 User Authentication** | Add NextAuth/JWT login so each author has their own private dashboard and scan history |
-| **👤 Per-User History** | Replace the current global "Live Network" ledger with personal scan histories tied to authenticated accounts |
-| **📬 Automated Monitoring** | Cron-based re-scanning — get email/Slack alerts when new copies appear for your tracked articles |
-| **🤖 LLM-Powered Analysis** | Use Gemini/GPT to detect paraphrased plagiarism (rewritten content that evades word-overlap detection) |
-| **📊 Analytics Dashboard** | Visualize plagiarism trends over time — charts showing copy frequency, top offending domains, etc. |
-| **🔗 Direct DMCA Filing** | Integrate with Google's DMCA form and hosting provider abuse APIs for one-click takedown submissions |
-| **🧩 Browser Extension** | Chrome/Firefox extension that lets you scan any page you're reading to check if it's stolen content |
+| **🌐 Multi-Platform Support** | Extend beyond DEV.to — support Hashnode, Medium, personal blogs |
+| **🔐 User Authentication** | Add NextAuth/JWT login so each author has their own dashboard |
+| **📬 Automated Monitoring** | Cron-based re-scanning — get alerts when new copies appear |
+| **🤖 Paraphrase Detection** | Use LLMs to detect rewritten content that evades word-overlap detection |
+| **📊 Analytics Dashboard** | Visualize plagiarism trends over time — charts, top offending domains |
+| **🔗 Direct DMCA Filing** | Integrate with Google's DMCA form for one-click takedown submissions |
+| **🧩 Browser Extension** | Chrome/Firefox extension to scan any page you're reading |
 
-> **Note**: Authentication is intentionally omitted for demo purposes. The current "Live Network" design showcases a global public ledger where all scans are visible — similar to a blockchain explorer for content provenance. In production, JWT/NextAuth would gate the scan and history features per-user.
+> **Note**: Authentication is intentionally omitted for demo purposes. The current design showcases a global public ledger where all scans are visible — similar to a blockchain explorer for content provenance. In production, JWT/NextAuth would gate the features per-user.
 
 ---
 
