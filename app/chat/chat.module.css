@@ -23,6 +23,7 @@
   letter-spacing: -0.025em;
   background: linear-gradient(to right, #2dd4bf, #10b981);
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
   margin: 0;
 }
@@ -214,6 +215,38 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #9ca3af;
   width: fit-content;
+}
+
+.reasoningBlock {
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.reasoningBlock details {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.reasoningBlock summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #a855f7;
+  outline: none;
+  user-select: none;
+}
+
+.reasoningContent {
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  opacity: 0.8;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .toolName {

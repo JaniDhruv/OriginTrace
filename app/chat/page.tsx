@@ -86,6 +86,16 @@ export default function ChatPage() {
                     if (part.type === 'text') {
                       return <ReactMarkdown key={i} remarkPlugins={[remarkGfm]}>{part.text}</ReactMarkdown>;
                     }
+                    if (part.type === 'reasoning') {
+                      return (
+                        <div key={i} className={styles.reasoningBlock}>
+                          <details>
+                            <summary>Agent Thoughts</summary>
+                            <div className={styles.reasoningContent}>{part.text}</div>
+                          </details>
+                        </div>
+                      );
+                    }
                     if (part.type === 'dynamic-tool') {
                       return (
                         <div key={part.toolCallId} className={styles.toolInvocation}>

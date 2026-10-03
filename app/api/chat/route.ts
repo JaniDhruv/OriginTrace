@@ -76,7 +76,7 @@ async function fetchSanityContext(): Promise<string> {
         for (const check of checks) {
           const verdictLabel = check.verdict === 'unattributed_repost' ? '🔴 UNATTRIBUTED'
             : check.verdict === 'credited_syndication' ? '✅ CREDITED'
-            : check.verdict;
+              : check.verdict;
           lines.push(`    ${verdictLabel}: ${check.checkedTitle || check.checkedUrl}`);
           lines.push(`      URL: ${check.checkedUrl}`);
           lines.push(`      Overlap: ${check.overlapPercent}%`);
@@ -156,7 +156,7 @@ export async function POST(req: Request) {
       temperature: 1,
       topP: 0.95,
       maxOutputTokens: 16384,
-      stopWhen: stepCountIs(5),
+      stopWhen: stepCountIs(10),
       tools,
       providerOptions: {
         nim: {
