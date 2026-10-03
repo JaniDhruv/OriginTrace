@@ -1,11 +1,28 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 export default function ChatPage() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+  const chatContext: any = useChat();
+  const messages = chatContext.messages || [];
+  const isLoading = chatContext.status === 'submitted' || chatContext.status === 'streaming' || chatContext.isLoading;
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [input, setInput] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+    
+    if (chatContext.append) {
+      chatContext.append({ role: 'user', content: input });
+    } else if (chatContext.sendMessage) {
+      chatContext.sendMessage([{ role: 'user', content: input }]);
+    }
+    setInput('');
+  };
+
+  const handleInputChange = (e: any) => setInput(e.target.value);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
