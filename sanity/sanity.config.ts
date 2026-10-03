@@ -10,6 +10,7 @@ export default defineConfig({
   title: 'OriginTrace',
   projectId,
   dataset,
+  basePath: '/studio',
   plugins: [structureTool()],
   schema: {
     types: [user, article, author, provenanceCheck],
