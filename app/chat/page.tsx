@@ -18,7 +18,7 @@ export default function ChatPage() {
     if (chatContext.append) {
       chatContext.append({ role: 'user', content: input });
     } else if (chatContext.sendMessage) {
-      chatContext.sendMessage([{ role: 'user', content: input }]);
+      chatContext.sendMessage({ content: input });
     }
     setInput('');
   };

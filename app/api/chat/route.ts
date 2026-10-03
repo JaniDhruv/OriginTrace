@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   // 1. Connect the MCP Client via Server-Sent Events (SSE)
   const mcpClient = await createMCPClient({
     transport: {
-      type: 'sse',
+      type: 'http',
       url: endpointUrl,
       headers: {
         Authorization: `Bearer ${token}`,
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
     // 3. Stream the response from Gemini using the MCP tools
     const result = streamText({
-      model: google('gemini-1.5-pro'),
+      model: google('gemini-3.5-pro'),
       messages,
       tools,
     });
