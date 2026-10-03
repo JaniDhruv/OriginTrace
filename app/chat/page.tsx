@@ -1,13 +1,12 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, type ChangeEvent } from 'react';
 import styles from './chat.module.css';
 
 export default function ChatPage() {
-  const chatContext: any = useChat();
-  const messages = chatContext.messages || [];
-  const isLoading = chatContext.status === 'submitted' || chatContext.status === 'streaming' || chatContext.isLoading;
+  const { messages, sendMessage, status, error, clearError } = useChat();
+  const isLoading = status === 'submitted' || status === 'streaming';
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState('');
 
@@ -15,15 +14,11 @@ export default function ChatPage() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
     
-    if (chatContext.append) {
-      chatContext.append({ role: 'user', content: input });
-    } else if (chatContext.sendMessage) {
-      chatContext.sendMessage({ content: input });
-    }
+    void sendMessage({ text: input });
     setInput('');
   };
 
-  const handleInputChange = (e: any) => setInput(e.target.value);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => setInput(e.target.value);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -49,7 +44,18 @@ export default function ChatPage() {
           </div>
         )}
         
-        {messages.map((m: any) => (
+        {error && (
+          <div className={`${styles.messageRow} ${styles.messageRowAgent}`}>
+            <div className={`${styles.messageBubble} ${styles.messageBubbleAgent}`}>
+              <div className={styles.messageRole}>Agent</div>
+              <div className={styles.messageContent}>
+                {error.message}
+                <button type="button" onClick={clearError} className={styles.retryBtn}>Dismiss</button>
+              </div>
+            </div>
+          </div>
+        )}
+        {messages.map((m) => (
           <div
             key={m.id}
             className={`${styles.messageRow} ${m.role === 'user' ? styles.messageRowUser : styles.messageRowAgent}`}
@@ -65,13 +71,21 @@ export default function ChatPage() {
                 {m.role === 'user' ? 'You' : 'Agent'}
               </div>
               <div className={styles.messageContent}>
-                {m.content}
-                {m.toolInvocations?.map((toolInvocation: any) => (
-                  <div key={toolInvocation.toolCallId} className={styles.toolInvocation}>
-                    <span className={styles.toolName}>[{toolInvocation.toolName}]</span> 
-                    {' '}status: {toolInvocation.state}
-                  </div>
-                ))}
+                {m.parts.map((part, i) => {
+                  if (part.type === 'text') return <span key={i}>{part.text}</span>;
+                  if (part.type === 'dynamic-tool') {
+                    return (
+                      <div key={part.toolCallId} className={styles.toolInvocation}>
+                        <span className={styles.toolName}>Sanity Context MCP</span>
+                        {' '}{part.toolName.replaceAll('_', ' ')}: {part.state}
+                      </div>
+                    );
+                  }
+                  if (part.type === 'source-url') {
+                    return <a key={part.sourceId} href={part.url} target="_blank" rel="noreferrer">{part.title || part.url}</a>;
+                  }
+                  return null;
+                })}
               </div>
             </div>
           </div>

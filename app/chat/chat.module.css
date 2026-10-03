@@ -178,6 +178,17 @@
   cursor: not-allowed;
 }
 
+.retryBtn {
+  display: block;
+  margin-top: 0.75rem;
+  padding: 0;
+  color: #5eead4;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
 .typingIndicator {
   display: flex;
   gap: 0.25rem;
