@@ -54,7 +54,7 @@
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.025em;
-  background: linear-gradient(135deg, #2dd4bf, #3b82f6);
+  background: linear-gradient(135deg, #2dd4bf 0%, #3b82f6 50%, #2dd4bf 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -63,6 +63,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  background-size: 200% auto;
+  animation: agentTitleShimmer 4s infinite linear;
+}
+
+@keyframes agentTitleShimmer {
+  to { background-position: 200% center; }
 }
 
 .betaBadge {
@@ -76,6 +82,12 @@
   border-radius: 9999px;
   border: 1px solid rgba(45, 212, 191, 0.3);
   box-shadow: 0 0 10px rgba(45, 212, 191, 0.2);
+  animation: badgePulse 2s infinite alternate ease-in-out;
+}
+
+@keyframes badgePulse {
+  from { box-shadow: 0 0 5px rgba(45, 212, 191, 0.1); border-color: rgba(45, 212, 191, 0.3); }
+  to { box-shadow: 0 0 15px rgba(45, 212, 191, 0.5); border-color: rgba(45, 212, 191, 0.6); }
 }
 
 .subtitle {
@@ -131,10 +143,16 @@
   margin-bottom: 2rem;
   text-align: center;
   letter-spacing: -0.03em;
-  background: linear-gradient(180deg, #fff 0%, #a1a1aa 100%);
+  background: linear-gradient(135deg, #fff 0%, #2dd4bf 50%, #9333ea 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: titleShimmer 8s infinite linear;
+  background-size: 200% auto;
+}
+
+@keyframes titleShimmer {
+  to { background-position: 200% center; }
 }
 
 .suggestionGrid {
