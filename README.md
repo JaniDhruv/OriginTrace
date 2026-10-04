@@ -228,6 +228,9 @@ Every provenance check — verdict, overlap percentage, attribution evidence, ma
 ### 4. Agent Queries (Read Path via MCP)
 The AI Agent connects to Sanity Context MCP and dynamically writes GROQ queries at runtime to answer user questions. It reads the structured fields, interprets boolean flags, ranks results by overlap percentage, and generates legal templates — all grounded in the Content Lake.
 
+### 5. Pre-Fetched Structured Context
+Before the agent starts reasoning, the backend runs `fetchSanityContext()` — a dedicated function that executes GROQ queries directly against Sanity to build a structured snapshot of all indexed articles and their provenance checks (per-article breakdowns, attribution booleans, overlap percentages, aggregate platform stats). This snapshot is injected into the agent's system prompt, giving it instant answers for summary questions without an MCP round-trip.
+
 ### Sanity Schema Design
 
 ```
@@ -244,7 +247,16 @@ The AI Agent connects to Sanity Context MCP and dynamically writes GROQ queries 
 │          │       │           │       │   .missing[]     │
 │          │       │           │       │ • dmcaTemplate   │
 │          │       │           │       │ • reconciledEntr.│
-└──────────┘       └───────────┘       └──────────────────┘
+└──────────┘       └───┬───────┘       └──────────────────┘
+                       │ ref
+                  ┌────▼─────┐
+                  │   user   │
+                  │          │
+                  │ • name   │
+                  │ • email  │
+                  │ • authId │
+                  │ • avatar │
+                  └──────────┘
 ```
 
 **Sanity Project ID**: `iossngh3`
@@ -289,7 +301,7 @@ The AI Agent connects to Sanity Context MCP and dynamically writes GROQ queries 
                           ▼
               ┌────────────────────────┐
               │  5. CANDIDATE SCRAPING │
-              │  Fetch up to 20 pages  │
+              │  Fetch up to 15 pages  │
               │  Extract + clean text  │
               └───────────┬────────────┘
                           │
@@ -374,6 +386,8 @@ The AI Agent connects to Sanity Context MCP and dynamically writes GROQ queries 
 | `/api/report/[articleId]` | GET | Aggregated report data for a specific article |
 | `/api/stats` | GET | Global platform statistics (deduplicated) |
 | `/api/check/[id]` | GET | Individual provenance check detail |
+| `/api/articles` | GET | List all indexed articles from Sanity |
+| `/api/checks` | GET | List recent provenance checks |
 
 ### Pages
 
@@ -385,6 +399,7 @@ The AI Agent connects to Sanity Context MCP and dynamically writes GROQ queries 
 | `/guide` | **User Guide** — tabbed walkthrough with screenshots, prompts, and blacklisted actions |
 | `/report/[articleId]` | Sharable aggregated report — all copies for a specific article |
 | `/check/[id]` | Individual check detail — full DMCA template, attribution evidence |
+| `/studio` | Embedded Sanity Studio — manage documents, schemas, and the Content Lake directly |
 
 ---
 
@@ -440,6 +455,7 @@ This fetches all your published DEV.to articles and indexes them in Sanity as ca
 | `SANITY_ORG_ID` | ❌ | Sanity org ID (for Context MCP endpoint) |
 | `SANITY_CONTEXT_API_TOKEN` | ❌ | Org-level token for Context MCP |
 | `SANITY_MCP_ENDPOINT` | ❌ | Custom Sanity Context MCP endpoint URL |
+| `NIM_MODEL` | ❌ | Override model ID (default: `nvidia/nemotron-3.5-lightning-30b-a3b`) |
 | `DEVTO_HANDLE` | ❌ | DEV.to username for portfolio seeding |
 
 ---
@@ -494,7 +510,7 @@ OriginTrace/
 │       ├── article.ts        #   Canonical article document
 │       ├── author.ts         #   Author profile document
 │       ├── provenanceCheck.ts #  Provenance check record (the core schema)
-│       └── user.ts           #   User account document
+│       └── user.ts           #   User account document (future auth)
 │
 ├── scripts/
 │   └── seed.ts               # DEV.to portfolio seeder
@@ -517,6 +533,18 @@ OriginTrace/
 | **🧩 Browser Extension** | Chrome/Firefox extension to scan any page you're reading |
 
 > **Note**: Authentication is intentionally omitted for demo purposes. The current design showcases a global public ledger where all scans are visible — similar to a blockchain explorer for content provenance. In production, JWT/NextAuth would gate the features per-user.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! If you'd like to add multi-platform support, paraphrase detection, or improve the NLP engine, please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
