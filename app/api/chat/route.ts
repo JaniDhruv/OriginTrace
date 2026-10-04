@@ -152,7 +152,10 @@ export async function POST(req: Request) {
     const mcpTools = await mcpClient.tools();
 
     // Inject our custom scan action tool alongside the Sanity Context MCP tools
-    const origin = new URL(req.url).origin;
+    const host = req.headers.get('host');
+    const proto = req.headers.get('x-forwarded-proto') ?? (host?.includes('localhost') ? 'http' : 'https');
+    const baseUrl = host ? `${proto}://${host}` : new URL(req.url).origin;
+    
     const tools: Record<string, any> = {
       ...mcpTools,
       scan_article: tool({
@@ -163,7 +166,7 @@ export async function POST(req: Request) {
         // @ts-expect-error - AI SDK type inference for execute can be overly strict with custom tools
         execute: async ({ devToUrl }: { devToUrl: string }) => {
           try {
-            const res = await fetch(`${origin}/api/scan`, {
+            const res = await fetch(`${baseUrl}/api/scan`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ devToUrl })
