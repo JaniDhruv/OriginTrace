@@ -53,8 +53,8 @@ export default function ChatPage() {
               <button onClick={() => setInput("Draft a DMCA takedown notice for the top offender")} className={styles.suggestionChip}>
                 Draft DMCA template
               </button>
-              <button onClick={() => setInput("Which sites successfully credited the original author?")} className={styles.suggestionChip}>
-                Check proper attribution
+              <button onClick={() => setInput("Scan my dev.to post [DEV.TO URL]")} className={styles.suggestionChip}>
+                Scan dev.to article
               </button>
             </div>
           </div>
@@ -65,7 +65,7 @@ export default function ChatPage() {
             <div className={styles.messageRowInner}>
               <div className={`${styles.messageBubble} ${styles.messageBubbleAgent}`}>
                 <div className={styles.agentHeader}>
-                  <div className={styles.agentAvatar}>AI</div>
+                  <div className={styles.agentAvatar}><img src="/icon.png" alt="OriginTrace" style={{width: '100%', height: '100%', objectFit: 'contain'}} /></div>
                   <div className={styles.agentName}>OriginTrace</div>
                 </div>
                 <div className={styles.messageContent}>
@@ -91,7 +91,7 @@ export default function ChatPage() {
               >
                 {m.role !== 'user' && (
                   <div className={styles.agentHeader}>
-                    <div className={styles.agentAvatar}>AI</div>
+                    <div className={styles.agentAvatar}><img src="/icon.png" alt="OriginTrace" style={{width: '100%', height: '100%', objectFit: 'contain'}} /></div>
                     <div className={styles.agentName}>OriginTrace</div>
                   </div>
                 )}
@@ -133,7 +133,7 @@ export default function ChatPage() {
             <div className={styles.messageRowInner}>
               <div className={`${styles.messageBubble} ${styles.messageBubbleAgent}`}>
                 <div className={styles.agentHeader}>
-                  <div className={styles.agentAvatar}>AI</div>
+                  <div className={styles.agentAvatar}><img src="/icon.png" alt="OriginTrace" style={{width: '100%', height: '100%', objectFit: 'contain'}} /></div>
                   <div className={styles.agentName}>OriginTrace</div>
                 </div>
                 <div className={styles.typingIndicator}>

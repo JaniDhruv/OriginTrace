@@ -230,7 +230,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2dd4bf, #0ea5e9);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -238,6 +238,8 @@
   font-weight: 800;
   font-size: 0.85rem;
   box-shadow: 0 0 12px rgba(45, 212, 191, 0.4);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .agentName {

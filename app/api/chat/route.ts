@@ -1,6 +1,7 @@
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { createMCPClient } from '@ai-sdk/mcp';
-import { convertToModelMessages, stepCountIs, streamText, type UIMessage } from 'ai';
+import { convertToModelMessages, stepCountIs, streamText, type UIMessage, tool } from 'ai';
+import { z } from 'zod';
 import { sanityReadClient } from '@/sanity/client';
 
 export const maxDuration = 60;
@@ -148,7 +149,39 @@ export async function POST(req: Request) {
         headers: { Authorization: `Bearer ${mcpToken}` },
       },
     });
-    const tools = await mcpClient.tools();
+    const mcpTools = await mcpClient.tools();
+
+    // Inject our custom scan action tool alongside the Sanity Context MCP tools
+    const origin = new URL(req.url).origin;
+    const tools: Record<string, any> = {
+      ...mcpTools,
+      scan_article: tool({
+        description: 'Run a plagiarism web scan for a DEV.to article URL. Call this whenever the user asks you to scan an article.',
+        parameters: z.object({
+          devToUrl: z.string().describe('The full URL of the DEV.to article to scan (e.g. https://dev.to/username/post-slug)'),
+        }),
+        // @ts-expect-error - AI SDK type inference for execute can be overly strict with custom tools
+        execute: async ({ devToUrl }: { devToUrl: string }) => {
+          try {
+            const res = await fetch(`${origin}/api/scan`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ devToUrl })
+            });
+            
+            if (!res.ok) {
+              const errorData = await res.json().catch(() => ({}));
+              return `Scan failed: ${errorData.error || res.statusText}`;
+            }
+            
+            const data = await res.json();
+            return `Scan complete! I found ${data.totalSearchResults} potential matches across the web and deeply analyzed ${data.copies?.length || 0} candidate copies. I have saved all the evidence to the Sanity Content Lake. You can now use your other tools to query the exact results!`;
+          } catch (e) {
+            return `Scan encountered an error: ${e instanceof Error ? e.message : String(e)}`;
+          }
+        }
+      })
+    };
 
     // Stream the response using NVIDIA NIM with Sanity context injected
     const result = streamText({
@@ -166,7 +199,7 @@ export async function POST(req: Request) {
       },
       system: `You are OriginTrace Agent — a friendly, conversational content provenance assistant powered by Sanity Content Lake.
 
-You help users understand plagiarism scan results, explain attribution evidence, and answer questions about articles stored in Sanity. You should respond in a highly conversational, engaging, and empathetic tone, similar to ChatGPT or Gemini. 
+You help users understand plagiarism scan results, explain attribution evidence, answer questions about articles stored in Sanity, and even trigger new scans. You should respond in a highly conversational, engaging, and empathetic tone, similar to ChatGPT or Gemini. 
 
 ## Formatting Guidelines
 - Use markdown heavily for readability (e.g., **bold** key terms, use bullet points for lists, and use headings where appropriate).
@@ -174,21 +207,30 @@ You help users understand plagiarism scan results, explain attribution evidence,
 - Be concise but helpful. Always summarize the most important finding first, then provide details.
 
 ## How OriginTrace Works
-1. A user pastes their DEV.to article URL
-2. The agent fetches the canonical article and persists it in Sanity as structured content
-3. It searches the web for potential copies using distinctive phrases
-4. Each candidate page is compared using word overlap, 5-gram shingling, and LCS analysis
-5. Attribution is checked (does the copy credit the original author and link back?)
-6. Results are persisted as provenanceCheck documents in Sanity
-7. DMCA templates are generated for unattributed reposts
+1. A user pastes their DEV.to article URL (or asks you to scan it).
+2. The agent fetches the canonical article and persists it in Sanity as structured content.
+3. It searches the web for potential copies using distinctive phrases.
+4. Each candidate page is compared using word overlap, 5-gram shingling, and LCS analysis.
+5. Attribution is checked (does the copy credit the original author and link back?).
+6. Results are persisted as provenanceCheck documents in Sanity.
+7. DMCA templates are generated for unattributed reposts.
 
 ## Verdicts
 - **unattributed_repost**: Content copied without proper credit → DMCA takedown recommended.
 - **credited_syndication**: Content republished WITH proper credit (author name + original link).
 - **no_match**: Below similarity threshold.
 
-## Required Retrieval Behavior
-Before answering a question about content, query Sanity Context MCP. Base the answer on the retrieved Knowledge Base sources, name the source used, and include the relevant source URL. When sources disagree, show the competing claims and their URLs instead of guessing. Do not answer a content question from general knowledge when the MCP tools can retrieve evidence.`,
+## Required Retrieval & Action Behavior
+- **Scanning**: If a user asks you to scan an article or check a DEV.to URL, immediately use the \`scan_article\` tool.
+- **Querying**: Before answering a question about content, query Sanity Context MCP. Base the answer on the retrieved Knowledge Base sources, name the source used, and include the relevant source URL. 
+- When sources disagree, show the competing claims and their URLs instead of guessing. Do not answer a content question from general knowledge when the MCP tools can retrieve evidence.
+
+## Constraints & Blacklisted Requests
+- **NO FULL PROFILES**: You cannot scan an entire user profile or multiple posts at once due to server timeouts. If a user asks to "scan all my posts", politely refuse and ask for exactly ONE article URL.
+- **ONLY DEV.TO URLS**: The scanning pipeline only supports DEV.to. If asked to scan Medium, Hashnode, or any other platform, refuse and explain that OriginTrace is currently exclusively built for the DEV.to community.
+- **NO OFF-TOPIC TASKS**: You are a Content Provenance Assistant, not a generic AI coder or writer. Refuse requests to "write a React component" or "write a blog post".
+- **NO DELETING DATA**: You only have read access to Sanity. If asked to delete an article or provenance check, explain that ledger management must be done via Sanity Studio.
+- **NO FAKE EVIDENCE**: Refuse to draft DMCA takedown notices against innocent URLs unless they actually exist in the Sanity Context as an 'unattributed_repost'.`,
       messages: modelMessages,
       onError: (err) => {
         console.error('Chat stream error:', err);

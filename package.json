@@ -28,7 +28,8 @@
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
     "sanity": "^6.15.0",
-    "sanity-plugin-asset-source-unsplash": "^7.0.25"
+    "sanity-plugin-asset-source-unsplash": "^7.0.25",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/diff": "^7.0.0",
