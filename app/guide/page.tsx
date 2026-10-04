@@ -40,30 +40,29 @@ export default function GuidePage() {
           }
         }}
       >
-        <img id="lightbox-img" src="" alt="" className={styles.lightboxImg} />
+        <img id="lightbox-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" className={styles.lightboxImg} />
         <span className={styles.lightboxClose}>✕</span>
       </div>
+
       <header className={styles.header}>
-        <div className={styles.glowOrb}></div>
         <h1 className={styles.title}>User Guide</h1>
-        <p className={styles.subtitle}>Master the complete content protection workflow — from scan to takedown.</p>
+        <p className={styles.subtitle}>A complete technical walkthrough of the OriginTrace pipeline.</p>
       </header>
 
-      <main className={styles.main}>
-        {/* TAB NAVIGATION */}
+      <main>
+        {/* PREMIUM PILL TAB NAVIGATION */}
         <div className={styles.tabNav}>
           {([
-            { id: 'scanner' as Tab, step: '1', icon: '🔍', label: 'The Scanner' },
-            { id: 'ledger' as Tab, step: '2', icon: '🗂️', label: 'The Ledger' },
-            { id: 'agent' as Tab, step: '3', icon: '🤖', label: 'The AI Agent' },
+            { id: 'scanner' as Tab, label: 'Pipeline & Scanning' },
+            { id: 'ledger' as Tab, label: 'Data & Ledger' },
+            { id: 'agent' as Tab, label: 'AI Action Agent' },
           ]).map((tab) => (
             <button
               key={tab.id}
-              className={`${styles.tabBtn} ${activeTab === tab.id ? styles.activeTab : ''}`}
+              className={activeTab === tab.id ? styles.activeTab : styles.tabBtn}
               onClick={() => setActiveTab(tab.id)}
             >
-              <span className={styles.stepBadge}>Step {tab.step}</span>
-              {tab.icon} {tab.label}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -71,79 +70,59 @@ export default function GuidePage() {
         {/* ═══════════════════ SCANNER TAB ═══════════════════ */}
         {activeTab === 'scanner' && (
           <div className={styles.fadeEnter}>
-            {/* Hero */}
-            <section className={styles.card}>
-              <div className={styles.contentSplit}>
-                <div className={styles.textContent}>
-                  <h2>Paste. Scan. Protect.</h2>
-                  <p className={styles.cardText}>
-                    Drop any DEV.to article URL into the scanner. OriginTrace's programmatic pipeline will automatically extract distinctive phrases from your writing and search the entire web for potential plagiarism.
-                  </p>
-                  <div className={styles.stepList}>
-                    <div className={styles.stepItem}>
-                      <span className={styles.stepNumber}>1</span>
-                      <span>Paste your DEV.to article URL</span>
-                    </div>
-                    <div className={styles.stepItem}>
-                      <span className={styles.stepNumber}>2</span>
-                      <span>Watch the radar sweep the web in real-time</span>
-                    </div>
-                    <div className={styles.stepItem}>
-                      <span className={styles.stepNumber}>3</span>
-                      <span>Review your results with detailed evidence</span>
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/hero.png" alt="Scanner Homepage" className={styles.screenshot} />
-                </div>
+            <section className={styles.sectionBlock}>
+              <div className={styles.textContent}>
+                <h2>1. Run a Scan</h2>
+                <p className={styles.cardText}>
+                  The workflow begins by pasting a DEV.to article URL. OriginTrace fetches the document and extracts distinctive linguistic features to use as search signals.
+                </p>
+              </div>
+              <div className={styles.imageBox}>
+                <ZoomableImg src="/screenshots/hero.png" alt="Scanner Homepage" className={styles.screenshot} />
               </div>
             </section>
 
-            {/* Scanning Animation */}
-            <section className={styles.card}>
-              <div className={styles.contentSplitReverse}>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/scanning.png" alt="Live Radar Scanner" className={styles.screenshot} />
-                </div>
-                <div className={styles.textContent}>
-                  <h2>Live Radar Scanner</h2>
-                  <p className={styles.cardText}>
-                    While the scan runs, a real-time animated radar visualizes the web crawl. The pipeline extracts your article's title + 4 most distinctive sentences, then queries them as exact-match phrases across search engines.
-                  </p>
-                  <div className={styles.tipBox}>
-                    <strong>How it works:</strong> OriginTrace uses Serper.dev (Google Search API) with quoted-phrase queries to find pages that contain your exact sentences — the strongest signal of content theft.
-                  </div>
-                </div>
+            <section className={styles.sectionBlock}>
+              <div className={styles.textContent}>
+                <h2>2. Live Web Crawl</h2>
+                <p className={styles.cardText}>
+                  OriginTrace uses the Serper.dev Google Search API to query the web for exact-match sentences from your article. The radar visualizes the search in real-time.
+                </p>
+              </div>
+              <div className={styles.imageBox}>
+                <ZoomableImg src="/screenshots/scanning.png" alt="Live Radar Scanner" className={styles.screenshot} />
               </div>
             </section>
 
-            {/* Results */}
-            <section className={styles.card}>
-              <div className={styles.contentSplit}>
-                <div className={styles.textContent}>
-                  <h2>Actionable Results</h2>
-                  <p className={styles.cardText}>
-                    Each discovered copy is deep-analyzed using a <strong>multi-signal overlap engine</strong> that combines three algorithms for robust detection:
-                  </p>
-                  <div className={styles.metricGrid}>
-                    <div className={styles.metric}>
-                      <span className={styles.metricValue}>20%</span>
-                      <span className={styles.metricLabel}>Word Overlap</span>
+            <section className={styles.sectionBlock}>
+              <div className={styles.textContent}>
+                <h2>3. Overlap Analysis</h2>
+                <p className={styles.cardText}>
+                  Every discovered copy is fetched and compared against the original article using a robust multi-signal NLP engine.
+                </p>
+                <ul className={styles.featureList}>
+                  <li>
+                    <div>
+                      <strong>Word Overlap (20%)</strong>
+                      Jaccard similarity of shared vocabulary.
                     </div>
-                    <div className={styles.metric}>
-                      <span className={styles.metricValue}>50%</span>
-                      <span className={styles.metricLabel}>5-gram Shingling</span>
+                  </li>
+                  <li>
+                    <div>
+                      <strong>5-gram Shingling (50%)</strong>
+                      Detects structurally identical paragraphs.
                     </div>
-                    <div className={styles.metric}>
-                      <span className={styles.metricValue}>30%</span>
-                      <span className={styles.metricLabel}>LCS Ratio</span>
+                  </li>
+                  <li>
+                    <div>
+                      <strong>LCS Ratio (30%)</strong>
+                      Longest Common Subsequence handles reordering.
                     </div>
-                  </div>
-                </div>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/results.png" alt="Scan Results" className={styles.screenshot} />
-                </div>
+                  </li>
+                </ul>
+              </div>
+              <div className={styles.imageBox}>
+                <ZoomableImg src="/screenshots/results.png" alt="Scan Results" className={styles.screenshot} />
               </div>
             </section>
           </div>
@@ -152,71 +131,53 @@ export default function GuidePage() {
         {/* ═══════════════════ LEDGER TAB ═══════════════════ */}
         {activeTab === 'ledger' && (
           <div className={styles.fadeEnter}>
-            {/* Ledger Overview */}
-            <section className={styles.card}>
-              <div className={styles.contentSplit}>
-                <div className={styles.textContent}>
-                  <h2>Your Content Provenance Ledger</h2>
-                  <p className={styles.cardText}>
-                    Every scan is permanently recorded in the <strong>Sanity Content Lake</strong> — creating an immutable, queryable ledger of your content's provenance history. Think of it as a blockchain explorer for your writing.
-                  </p>
-                  <ul className={styles.statusList}>
-                    <li><span className={styles.dotRed}></span> <strong>Unattributed Repost</strong> — Stolen without credit. DMCA recommended.</li>
-                    <li><span className={styles.dotGreen}></span> <strong>Credited Syndication</strong> — Properly attributed with author name + link.</li>
-                    <li><span className={styles.dotGray}></span> <strong>No Match</strong> — Below similarity threshold. Filtered out.</li>
-                  </ul>
-                </div>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/ledger.png" alt="Scan History Ledger" className={styles.screenshot} />
-                </div>
+            <section className={styles.sectionBlock}>
+              <div className={styles.textContent}>
+                <h2>The Provenance Ledger</h2>
+                <p className={styles.cardText}>
+                  All scan results are permanently indexed in the Sanity Content Lake. This creates a queryable, immutable history of your content across the web.
+                </p>
+              </div>
+              <div className={styles.imageBox}>
+                <ZoomableImg src="/screenshots/ledger.png" alt="Scan History Ledger" className={styles.screenshot} />
               </div>
             </section>
 
-            {/* Attribution Detail */}
-            <section className={styles.card}>
-              <div className={styles.contentSplitReverse}>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/report.png" alt="Attribution Analysis" className={styles.screenshot} />
-                </div>
-                <div className={styles.textContent}>
-                  <h2>Smart Attribution Detection</h2>
-                  <p className={styles.cardText}>
-                    OriginTrace doesn't just find copies — it checks <strong>how</strong> the copy credits you. Each candidate is evaluated for:
-                  </p>
-                  <div className={styles.booleanGrid}>
-                    <div className={styles.booleanItem}>
-                      <span className={styles.boolTrue}>✓</span> Author name present?
+            <section className={styles.sectionBlock}>
+              <div className={styles.textContent}>
+                <h2>Attribution Detection</h2>
+                <p className={styles.cardText}>
+                  Beyond simple text overlap, the engine parses the DOM of each copycat to detect how they attribute the work.
+                </p>
+                <ul className={styles.featureList}>
+                  <li>
+                    <div>
+                      <strong>Unattributed Reposts</strong>
+                      Content duplicated without credit. Flagged for DMCA action.
                     </div>
-                    <div className={styles.booleanItem}>
-                      <span className={styles.boolTrue}>✓</span> Original link included?
+                  </li>
+                  <li>
+                    <div>
+                      <strong>Credited Syndications</strong>
+                      Articles that correctly name the author and link back.
                     </div>
-                    <div className={styles.booleanItem}>
-                      <span className={styles.boolFalse}>✗</span> Attribution phrases?
-                    </div>
-                    <div className={styles.booleanItem}>
-                      <span className={styles.boolFalse}>✗</span> Canonical tag set?
-                    </div>
-                  </div>
-                  <p className={styles.cardTextSmall}>These booleans are stored as structured fields in Sanity — enabling the AI Agent to query them precisely.</p>
-                </div>
+                  </li>
+                </ul>
+              </div>
+              <div className={styles.imageBox}>
+                <ZoomableImg src="/screenshots/report.png" alt="Attribution Analysis" className={styles.screenshot} />
               </div>
             </section>
 
-            {/* Aggregated Reports */}
-            <section className={styles.card}>
-              <div className={styles.contentSplit}>
-                <div className={styles.textContent}>
-                  <h2>Sharable Aggregated Reports</h2>
-                  <p className={styles.cardText}>
-                    Each article gets its own sharable report page that aggregates all discovered copies across multiple scans. Share the link with your legal team or use it as evidence for platform abuse reports.
-                  </p>
-                  <div className={styles.tipBox}>
-                    <strong>Pro Tip:</strong> Each report page includes one-click DMCA template generation with pre-filled evidence passages, overlap percentages, and source URLs.
-                  </div>
-                </div>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/aggregated_report.png" alt="Aggregated Report" className={styles.screenshot} />
-                </div>
+            <section className={styles.sectionBlock}>
+              <div className={styles.textContent}>
+                <h2>Aggregated Reporting</h2>
+                <p className={styles.cardText}>
+                  Each canonical article gets an aggregated report page consolidating all found copies, including automated one-click DMCA takedown generators.
+                </p>
+              </div>
+              <div className={styles.imageBox}>
+                <ZoomableImg src="/screenshots/aggregated_report.png" alt="Aggregated Report" className={styles.screenshot} />
               </div>
             </section>
           </div>
@@ -225,91 +186,67 @@ export default function GuidePage() {
         {/* ═══════════════════ AGENT TAB ═══════════════════ */}
         {activeTab === 'agent' && (
           <div className={styles.fadeEnter}>
-            {/* Scan From Chat */}
-            <section className={styles.card}>
-              <div className={styles.contentSplit}>
-                <div className={styles.textContent}>
-                  <h2>Action Agent: Scan From Chat</h2>
-                  <p className={styles.cardText}>
-                    The OriginTrace Agent doesn't just <em>read</em> data — it can <strong>take action</strong>. Ask it to scan any DEV.to article and it will trigger the full programmatic pipeline, wait for results, and report back with a structured summary.
-                  </p>
-                  <div className={styles.tipBox}>
-                    <strong>Try it:</strong> <code>Scan my dev.to post [YOUR DEV.TO URL]</code>
-                  </div>
+            <section className={styles.sectionBlock}>
+              <div className={styles.textContent}>
+                <h2>Trigger Scans Programmatically</h2>
+                <p className={styles.cardText}>
+                  The AI Agent isn't just a chatbot; it's an Action Agent. You can instruct it to trigger the full scan pipeline directly from the chat interface.
+                </p>
+                <div className={styles.infoBox}>
+                  Try it: <code>Scan my dev.to post [URL]</code>
                 </div>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/agent_scan_thinking.png" alt="Agent triggering scan" className={styles.screenshot} />
-                </div>
+              </div>
+              <div className={styles.imageBox}>
+                <ZoomableImg src="/screenshots/agent_scan_thinking.png" alt="Agent triggering scan" className={styles.screenshot} />
               </div>
             </section>
 
-            {/* Agent Results */}
-            <section className={styles.card}>
-              <div className={styles.contentSplitReverse}>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/agent_scan_results.png" alt="Agent scan results" className={styles.screenshot} />
-                </div>
-                <div className={styles.textContent}>
-                  <h2>Structured Scan Summary</h2>
-                  <p className={styles.cardText}>
-                    After the scan completes, the agent delivers a structured breakdown: how many copies were found, how many are unattributed vs. credited, and actionable next steps — all grounded in the Sanity Content Lake.
-                  </p>
-                </div>
+            <section className={styles.sectionBlock}>
+              <div className={styles.textContent}>
+                <h2>Sanity Context MCP</h2>
+                <p className={styles.cardText}>
+                  The agent is grounded entirely in the Sanity Content Lake. It writes dynamic GROQ queries to answer complex questions about your ledger.
+                </p>
+              </div>
+              <div className={styles.imageBox}>
+                <ZoomableImg src="/screenshots/agent_thoughts.png" alt="Agent Thoughts" className={styles.screenshot} />
               </div>
             </section>
-
-            {/* Query & Reasoning */}
-            <section className={styles.card}>
-              <div className={styles.contentSplit}>
-                <div className={styles.textContent}>
-                  <h2>Deep Reasoning & MCP Queries</h2>
-                  <p className={styles.cardText}>
-                    The agent uses <strong>Sanity Context MCP</strong> to dynamically write GROQ queries at runtime. Every step of its reasoning is transparent — expand the "Agent Thoughts" blocks to see exactly how it arrives at each answer.
-                  </p>
-                </div>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/agent_thoughts.png" alt="Agent Thoughts" className={styles.screenshot} />
-                </div>
+            
+            <section className={`${styles.sectionBlock} ${styles.fullWidthBlock}`}>
+              <div className={styles.textContent}>
+                <h2>Agent Guardrails</h2>
+                <p className={styles.cardText}>The agent is equipped with strict scope limitations to prevent abuse and API timeouts.</p>
               </div>
-            </section>
-
-            {/* Agent Response */}
-            <section className={styles.card}>
-              <div className={styles.contentSplitReverse}>
-                <div className={styles.imageBox}>
-                  <ZoomableImg src="/screenshots/agent_response.png" alt="Agent response with tables" className={styles.screenshot} />
-                </div>
-                <div className={styles.textContent}>
-                  <h2>Rich, Actionable Responses</h2>
-                  <p className={styles.cardText}>
-                    The agent delivers beautifully formatted responses — markdown tables, attribution boolean breakdowns, overlap rankings, and DMCA drafts — all derived from structured Sanity data, not hallucinated guesses.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* Prompts Section */}
-            <section className={styles.card}>
-              <h2 style={{ marginBottom: '2rem' }}>💬 What You Can Ask</h2>
-              <div className={styles.promptColumns}>
-                <div className={styles.promptGroup}>
-                  <h3>✅ Try these prompts</h3>
+              <div className={styles.promptGrid}>
+                <div className={styles.promptColumn}>
+                  <h3>Supported Tasks</h3>
                   <ul className={styles.promptList}>
-                    <li><code>Scan my dev.to post [DEV.TO URL]</code></li>
-                    <li><code>Which article has the highest overlap percentage?</code></li>
-                    <li><code>Draft a DMCA takedown notice for the worst offender.</code></li>
-                    <li><code>Did the top copycat credit the original author?</code></li>
-                    <li><code>Show me all copies above 80% overlap that are missing the author name.</code></li>
+                    <li><code>Scan my dev.to post [URL]</code></li>
+                    <li><code>Which article has the highest overlap?</code></li>
+                    <li><code>Draft a DMCA for the worst offender.</code></li>
+                    <li><code>Did they credit me?</code></li>
                   </ul>
                 </div>
-                <div className={styles.promptGroup}>
-                  <h3 className={styles.badTitle}>❌ Blacklisted (Agent will refuse)</h3>
-                  <ul className={`${styles.promptList} ${styles.promptListBad}`}>
-                    <li><code>&quot;Scan all my posts&quot;</code> <span className={styles.reason}>Server timeout risk — one URL at a time</span></li>
-                    <li><code>&quot;Scan my Medium article&quot;</code> <span className={styles.reason}>Pipeline is DEV.to-exclusive</span></li>
-                    <li><code>&quot;Write a React component&quot;</code> <span className={styles.reason}>Off-topic — agent stays in character</span></li>
-                    <li><code>&quot;Delete this article from the ledger&quot;</code> <span className={styles.reason}>Agent has read-only Sanity access</span></li>
-                    <li><code>&quot;Draft a fake DMCA against this URL&quot;</code> <span className={styles.reason}>Requires actual evidence in Sanity</span></li>
+                <div className={styles.promptColumn}>
+                  <h3>Unsupported Tasks (Blacklisted)</h3>
+                  <ul className={styles.promptList}>
+                    <li>
+                      <code>Scan all my posts</code>
+                      <span className={styles.reasonText}>Blocked to prevent server timeouts</span>
+                    </li>
+                    <li>
+                      <code>Scan my Medium article</code>
+                      <span className={styles.reasonText}>Pipeline strictly requires DEV.to URLs</span>
+                    </li>
+                    <li>
+                      <code>Write a React component</code>
+                      <span className={styles.reasonText}>Blocked to enforce product character</span>
+                    </li>
+                    <li>
+                      <code>Delete this article</code>
+                      <span className={styles.reasonText}>Agent is restricted to read-only access</span>
+                    </li>
                   </ul>
                 </div>
               </div>
