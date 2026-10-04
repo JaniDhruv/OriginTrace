@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Interactive User Guide',
+  title: 'User Guide',
   description: 'Master the complete OriginTrace pipeline — from real-time scanning to DMCA takedowns.',
 };
 
