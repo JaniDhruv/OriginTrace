@@ -140,7 +140,7 @@ async function scanCanonicalArticle(article: CanonicalArticle) {
     },
     sanityAnalysis: {
       engine: 'Sanity-backed content reconciliation',
-      checkedCandidates: Math.min(searchResults.length, 8),
+      checkedCandidates: Math.min(searchResults.length, 15),
       attributionRule: 'Credited only when the repost includes both the original author name and original post link.',
     },
     phrasesSearched: phrases,
