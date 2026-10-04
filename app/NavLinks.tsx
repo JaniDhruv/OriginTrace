@@ -7,6 +7,7 @@ const links = [
   { href: '/', label: 'Scan' },
   { href: '/history', label: 'History' },
   { href: '/chat', label: 'Agent Chat' },
+  { href: '/guide', label: 'User Guide' },
 ];
 
 export default function NavLinks() {
