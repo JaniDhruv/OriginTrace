@@ -1569,3 +1569,6 @@ body::after {
 .site-footer-dot {
   color: var(--border-glass);
 }
+/* Lightbox */
+.lightbox-visible { opacity: 1 !important; pointer-events: auto !important; }
+.lightbox-visible img { transform: scale(1) !important; }
