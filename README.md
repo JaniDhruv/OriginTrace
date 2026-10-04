@@ -28,7 +28,7 @@
 
 ## 🧠 TL;DR
 
-> Paste a DEV.to article URL → OriginTrace's programmatic pipeline crawls the web for stolen copies → structured evidence is persisted to the **Sanity Content Lake** → then chat with the **AI Agent** (powered by NVIDIA NIM + **Sanity Context MCP**) to analyze the data, determine attribution verdicts, and generate DMCA takedown notices.
+> Paste a DEV.to article URL → OriginTrace's programmatic pipeline crawls the web for stolen copies → structured evidence is persisted to the **Sanity Content Lake** → then chat with the **AI Agent** (powered by NVIDIA NIM + **Sanity Context MCP**) to analyze the data, determine attribution verdicts, generate DMCA takedown notices, and even **trigger new scans directly from the chat**.
 
 **Why this only works with structured content:** The agent doesn't keyword-search for answers — it queries boolean attribution flags (`hasAuthorName`, `hasOriginalLink`), exact `overlapPercent` integers, and `verdict` enums from Sanity. A keyword search would never be able to answer *"Which copycat had the highest overlap but still credited the author?"* — OriginTrace can, because the content is structured.
 
@@ -90,7 +90,7 @@ Every day, developer blog posts are scraped, republished, and monetized across c
 
 | Feature | Description |
 |---|---|
-| **💬 AI Conversational Agent** | Chat with an AI Agent (NVIDIA NIM via the AI SDK) that uses **Sanity Context MCP** to query your provenance data, analyze attribution booleans, and draft DMCA notices |
+| **💬 AI Action Agent** | Chat with an AI Agent (NVIDIA NIM via the AI SDK) that uses **Sanity Context MCP** to query your provenance data, analyze attribution booleans, draft DMCA notices, and **trigger new scans directly from chat** |
 | **🔎 Web-Scale Plagiarism Detection** | Extracts distinctive phrases from your article and searches across the entire web using Serper (Google Search API) |
 | **🧠 Multi-Signal Overlap Engine** | Combines word overlap (20%), 5-gram shingling (50%), and longest common subsequence / LCS (30%) for robust detection that survives reformatting |
 | **⚖️ Attribution Analysis** | Checks if reposts include the original author name, a link to the original post, and attribution phrases — stored as structured booleans in Sanity |
@@ -99,12 +99,43 @@ Every day, developer blog posts are scraped, republished, and monetized across c
 | **📊 Aggregated Reports** | Sharable report pages that aggregate all copies found for a specific article across multiple scans |
 | **🕐 Scan History Ledger** | A global ledger showing all tracked articles and their plagiarism status over time |
 | **🎨 Premium Dark UI** | Glassmorphism design with animated radar scanner, staggered cards, micro-interactions, and a full-featured chatbot UI |
+| **📖 Interactive User Guide** | Tabbed walkthrough of every feature with screenshots, example prompts, and blacklisted actions |
 
 ---
 
 ## 🤖 The AI Agent
 
-This is the core of the **Path One** submission. OriginTrace's AI Agent is not a generic chatbot — it is a specialized content provenance assistant that **only works because the content is structured**.
+This is the core of the **Path One** submission. OriginTrace's AI Agent is not a generic chatbot — it is a specialized content provenance **Action Agent** that **only works because the content is structured**.
+
+### Action Agent: Scan From Chat
+
+The agent doesn't just *read* data — it can **take action**. Users can ask the agent to scan a DEV.to article directly from the chat interface:
+
+> *"Scan my dev.to post dev.to/username/my-article-slug"*
+
+The agent triggers the full programmatic pipeline (fetch → search → compare → persist), waits for the results, and reports back with a summary of what it found — all without leaving the chat.
+
+<p align="center">
+  <img src="public/screenshots/agent_scan_thinking.png" alt="Agent triggering a scan from chat" width="800" />
+  <br><em>The AI Agent triggering a live plagiarism scan directly from the chat — multiple rounds of reasoning and Sanity Context MCP queries fire automatically.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/agent_scan_results.png" alt="Agent reporting scan results" width="800" />
+  <br><em>After the scan completes, the agent reports a structured summary — 12 potential copies found, 4 unattributed reposts, 2 credited syndications — with next steps for the user.</em>
+</p>
+
+### Blacklisted Prompts
+
+The agent enforces strict guardrails to stay focused and prevent abuse:
+
+| Blacklisted Action | Reason |
+|---|---|
+| "Scan all my posts" | Server timeout risk — one URL at a time only |
+| "Scan my Medium article" | Pipeline is DEV.to-exclusive |
+| "Write a React component" | Off-topic — agent stays in character |
+| "Delete this article" | Agent has read-only Sanity access |
+| Fake DMCA drafts | Refuses to draft takedowns against URLs not in Sanity as `unattributed_repost` |
 
 ### How It Works
 
@@ -338,7 +369,7 @@ The AI Agent connects to Sanity Context MCP and dynamically writes GROQ queries 
 
 | Endpoint | Method | Purpose |
 |---|---|---|
-| `/api/chat` | POST | AI Agent chat — streams responses via Sanity Context MCP |
+| `/api/chat` | POST | AI Action Agent — streams responses via Sanity Context MCP + custom `scan_article` tool |
 | `/api/scan` | POST | Full scan pipeline — fetch, search, compare, persist |
 | `/api/report/[articleId]` | GET | Aggregated report data for a specific article |
 | `/api/stats` | GET | Global platform statistics (deduplicated) |
@@ -349,8 +380,9 @@ The AI Agent connects to Sanity Context MCP and dynamically writes GROQ queries 
 | Route | Description |
 |---|---|
 | `/` | Live scanner — paste a DEV.to URL, watch the radar animation, see results |
-| `/chat` | **AI Agent** — conversational interface to query Sanity provenance data |
+| `/chat` | **AI Action Agent** — conversational interface to query Sanity data and trigger scans |
 | `/history` | Scan Ledger — all tracked articles grouped by post, with copy counts |
+| `/guide` | **User Guide** — tabbed walkthrough with screenshots, prompts, and blacklisted actions |
 | `/report/[articleId]` | Sharable aggregated report — all copies for a specific article |
 | `/check/[id]` | Individual check detail — full DMCA template, attribution evidence |
 
@@ -441,8 +473,11 @@ OriginTrace/
 │   ├── layout.tsx            #   Root layout + sticky navbar
 │   ├── globals.css           #   Complete design system (hand-crafted CSS)
 │   ├── chat/
-│   │   ├── page.tsx          #   AI Agent conversational chat interface
+│   │   ├── page.tsx          #   AI Action Agent chat interface
 │   │   └── chat.module.css   #   Premium chatbot styles
+│   ├── guide/
+│   │   ├── page.tsx          #   Interactive User Guide (tabbed)
+│   │   └── guide.module.css  #   Guide page styles
 │   ├── history/page.tsx      #   Scan Ledger — articles grouped by post
 │   ├── report/[articleId]/   #   Sharable aggregated report page
 │   ├── check/[id]/           #   Individual provenance check detail
