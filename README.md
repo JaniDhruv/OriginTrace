@@ -18,8 +18,15 @@
 </p>
 
 <p align="center">
+  <a href="https://hub.xerj.org/contributors/JaniDhruv">
+    <img src="https://hub.xerj.org/contributors/JaniDhruv/badge.svg" alt="XERJ Corpus Hub contributor" />
+  </a>
+</p>
+
+<p align="center">
   <a href="https://origintrace.onrender.com">Live Demo</a> ·
   <a href="https://github.com/JaniDhruv/OriginTrace">GitHub</a> ·
+  <a href="#-recognition--indexing">Recognition</a> ·
   <a href="#-how-it-works">How It Works</a> ·
   <a href="#-the-ai-agent">The AI Agent</a>
 </p>
@@ -31,6 +38,28 @@
 > Paste a DEV.to article URL → OriginTrace's programmatic pipeline crawls the web for stolen copies → structured evidence is persisted to the **Sanity Content Lake** → then chat with the **AI Agent** (powered by NVIDIA NIM + **Sanity Context MCP**) to analyze the data, determine attribution verdicts, generate DMCA takedown notices, and even **trigger new scans directly from the chat**.
 
 **Why this only works with structured content:** The agent doesn't keyword-search for answers — it queries boolean attribution flags (`hasAuthorName`, `hasOriginalLink`), exact `overlapPercent` integers, and `verdict` enums from Sanity. A keyword search would never be able to answer *"Which copycat had the highest overlap but still credited the author?"* — OriginTrace can, because the content is structured.
+
+---
+
+## 🏆 Recognition & Indexing
+
+<p align="center">
+  <a href="https://hub.xerj.org/contributors/JaniDhruv">
+    <img src="https://hub.xerj.org/contributors/JaniDhruv/badge.svg" alt="XERJ Corpus Hub contributor" />
+  </a>
+</p>
+
+OriginTrace was selected and indexed in the **[XERJ Corpus Hub](https://hub.xerj.org/contributors/JaniDhruv)** ([PR #2582](https://github.com/xerj-org/xerj/pull/2582)) under the [AI, prompts and agents](https://hub.xerj.org/category/AI) category alongside open corpora like `kotaemon`, `promptify`, and `prompt-engineering-guide`.
+
+> *"When an AI coding agent encounters the same problem, it retrieves OriginTrace's implementation as a worked reference rather than guessing from memory."*
+
+| Detail | Specification |
+|---|---|
+| **Corpus Entry** | [`janidhruv--origintrace`](https://hub.xerj.org/corpus/janidhruv--origintrace) |
+| **Contributor Profile** | [`@JaniDhruv on XERJ Hub`](https://hub.xerj.org/contributors/JaniDhruv) |
+| **Selected Commit** | [`f1f8e5b`](https://github.com/JaniDhruv/OriginTrace/commit/f1f8e5b5f314d5f77ec2c4005ad7ffcff1021ecf) (`feat: migrate chat agent to NVIDIA NIM provider, fix tool rendering and UI state`) |
+| **Indexed Scope** | 6 files · 291 lines of TypeScript across `app/api`, `app/chat`, and project root |
+| **Reference Topic** | Canonical pattern for NVIDIA NIM migration, Vercel AI SDK integration, and Sanity Context MCP tool calling |
 
 ---
 
